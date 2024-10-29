@@ -194,7 +194,7 @@ const Create = () => {
         Alert.alert("Request submitted successfully!");
       }
 
-      router.replace("/home");
+      router.replace("/overview");
     } catch (error) {
       Alert.alert("Error", error.message);
     } finally {

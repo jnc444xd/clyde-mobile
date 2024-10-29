@@ -18,30 +18,27 @@ const Overview = () => {
 
     if (!loading && !isLogged) return <Redirect href="/sign-in" />;
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    }, []);
+    const fetchData = async () => {
+        try {
+            const fetchedData = await getMaintenanceRequestsByUnit(unitNumber);
+            const incompleteRequests = fetchedData.filter((request) => !request.isComplete);
+
+            setMaintenanceData(incompleteRequests);
+        } catch (error) {
+            console.error('Failed to fetch data: ', error);
+        }
+    };
 
     useEffect(() => {
         if (!unitNumber) return;
 
-        const fetchData = async () => {
-            try {
-                const fetchedData = await getMaintenanceRequestsByUnit(unitNumber);
-                
-                const incompleteRequests = fetchedData.filter((request) => !request.isComplete);
-                
-                setMaintenanceData(incompleteRequests);
-            } catch (error) {
-                console.error('Failed to fetch data: ', error);
-            }
-        };
-
         fetchData();
     }, []);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchData().then(() => setRefreshing(false));
+    };
 
     const openUpdateModal = (window, notes) => {
         setArrivalWindow(window);

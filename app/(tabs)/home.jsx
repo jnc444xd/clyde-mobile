@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View, RefreshControl } from "react-native";
 import { router, Link } from "expo-router";
 import { CustomButton } from "../../components";
 import { images } from "../../constants";
@@ -10,29 +10,28 @@ import LogoutButton from "../../components/LogoutButton";
 
 const Home = () => {
   const [notices, setNotices] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
   const { user } = useGlobalContext();
 
+  const fetchData = async () => {
+    try {
+      const fetchedData = await getNotices();
+
+      setNotices(fetchedData);
+    } catch (error) {
+      console.error('Failed to fetch notices: ', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const fetchedData = await getNotices();
-
-        setNotices(fetchedData);
-      } catch (error) {
-        console.error('Failed to fetch notices: ', error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  // const [refreshing, setRefreshing] = useState(false);
-
-  // const onRefresh = async () => {
-  //   setRefreshing(true);
-  //   await refetch();
-  //   setRefreshing(false);
-  // };
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData().then(() => setRefreshing(false));
+  };
 
   return (
     <SafeAreaView className="bg-primary">
@@ -59,8 +58,14 @@ const Home = () => {
       }
       <ScrollView
         contentContainerStyle={{
-          height: "50%",
+          height: "100%",
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
       >
         <View className="flex-grow justify-between w-full h-full px-4 my-6">
           <ScrollView
