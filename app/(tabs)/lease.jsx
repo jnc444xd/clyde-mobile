@@ -83,22 +83,6 @@ const LeaseInfo = () => {
               resizeMode="contain"
             />
           </View>
-          {
-            user && user.isAdmin &&
-            <CustomButton
-              title="Create Lease"
-              handlePress={() => router.push("/createLease")}
-              containerStyles="w-full"
-            />
-          }
-          {
-            user && user.isAdmin &&
-            <CustomButton
-              title="View Payment Lists"
-              handlePress={() => router.push("/updatePaymentList")}
-              containerStyles="w-full"
-            />
-          }
           <View>
             <Text className="flex-2 p-2 text-xl text-center font-pbold text-white bg-gray-800">Lease Info</Text>
             <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease ? lease.unit : null}</Text>

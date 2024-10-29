@@ -51,6 +51,22 @@ const Home = () => {
       {
         user && user.isAdmin &&
         <CustomButton
+          title="Go to Admin Chat"
+          handlePress={() => router.push("/adminChatSelect")}
+          containerStyles="w-full"
+        />
+      }
+      {
+        user && user.isAdmin &&
+        <CustomButton
+          title="View Payment Lists"
+          handlePress={() => router.push("/updatePaymentList")}
+          containerStyles="w-full"
+        />
+      }
+      {
+        user && user.isAdmin &&
+        <CustomButton
           title="Create Notice"
           handlePress={() => router.push("/createNotice")}
           containerStyles="w-full"
@@ -59,8 +75,8 @@ const Home = () => {
       {
         user && user.isAdmin &&
         <CustomButton
-          title="Go to Admin Chat"
-          handlePress={() => router.push("/adminChatSelect")}
+          title="Create Lease"
+          handlePress={() => router.push("/createLease")}
           containerStyles="w-full"
         />
       }

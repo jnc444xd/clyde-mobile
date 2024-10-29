@@ -121,7 +121,7 @@ const UpdatePaymentList = () => {
                         className="flex-col justify-between bg-white m-1 p-2"
                         style={{ marginTop: 50, marginHorizontal: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}
                     >
-                        <Text style={{ marginBottom: 15, textAlign: "center" }} className="text-bold text-xl">Payment List</Text>
+                        <Text style={{ marginBottom: 15, textAlign: "center" }} className="font-pbold text-2xl mt-6">Payment List</Text>
                         {modalData.map((payment, index) => (
                             <View key={index} className="flex-col mb-3 p-2">
                                 <Text className="text-[16px] text-black font-psemibold">{payment.month}</Text>
@@ -141,12 +141,13 @@ const UpdatePaymentList = () => {
                         <CustomButton
                             title="Submit"
                             handlePress={() => submit()}
-                            containerStyles="mt-7"
+                            containerStyles="mt-7 p-4"
                             isLoading={isSubmitting}
                         />
-                        <Button
+                        <CustomButton
                             title="Close"
-                            onPress={() => setModalVisible(!modalVisible)}
+                            handlePress={() => setModalVisible(!modalVisible)}
+                            containerStyles="mt-7 p-4"
                         />
                     </View>
                 </ScrollView>
@@ -171,34 +172,21 @@ const UpdatePaymentList = () => {
                     <View className="flex-column">
                         {Object.entries(paymentData).map(([unit, paymentsArray]) => (
                             <View key={unit}>
-                                <Text className="text-xl font-bold text-white mt-4">{`Unit ${unit}`}</Text>
-                                <Button
-                                    title="Open"
-                                    onPress={() => openUpdateModal(unit)}
+                                <Text className="text-3xl font-psemibold text-white mt-4">{`Unit ${unit}`}</Text>
+                                <CustomButton
+                                    title="Open Payment List"
+                                    handlePress={() => openUpdateModal(unit)}
+                                    containerStyles="mt-7 p-4"
                                 />
-                                {paymentsArray.map((paymentDetails, index) => (
+                                {/* {paymentsArray.map((paymentDetails, index) => (
                                     <View key={index} className="flex-row justify-between bg-gray-800 m-1 p-2">
                                         <Text className="text-white">{paymentDetails.month}</Text>
                                         <Text className="text-white">{`Rent Due: $${paymentDetails.rentAmount}`}</Text>
                                         <Text className="text-white">{paymentDetails.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
                                     </View>
-                                ))}
+                                ))} */}
                             </View>
                         ))}
-
-                        {/* {Object.entries(paymentData).map(([unit, payments]) => (
-                            <View key={unit}>
-                                <Text className="text-xl font-bold text-white mt-4">{`Unit ${unit}`}</Text>
-                                {payments.map((item, index) => (
-                                    <View key={index}>
-                                        <Text className="flex-1 p-2 text-l text-white bg-gray-800">{item.month}</Text>
-                                        <Text className="flex-1 p-2 text-l text-white bg-gray-800">Rent Due: ${item.rentAmount}</Text>
-                                        <Text className="flex-1 p-2 text-l text-white bg-gray-800">{item.isPaid ? "Paid" : "Not Paid"}</Text>
-                                        <Text className="flex-1 p-2 text-l text-white bg-gray-800">----</Text>
-                                    </View>
-                                ))}
-                            </View>
-                        ))} */}
                     </View>
                 </ScrollView>
             </ScrollView>
