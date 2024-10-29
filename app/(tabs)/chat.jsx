@@ -26,7 +26,7 @@ export default function Chat() {
   // const navigation = useNavigation();
 
   const { user } = useGlobalContext();
-  const chatroomID = user.accountID;
+  const chatroomID = user ? user.accountID : null;
 
   const onSignOut = () => {
     signOut(auth).catch(error => console.log('Error logging out: ', error));
@@ -93,7 +93,7 @@ export default function Chat() {
         borderRadius: 20,
       }}
       user={{
-        _id: user.email,
+        _id: user? user.email : null,
         // avatar: 
       }}
     />

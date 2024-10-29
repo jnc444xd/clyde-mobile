@@ -65,7 +65,7 @@ export const addMaintenanceRequest = async (maintenanceRequestData) => {
   }
 };
 
-export const getMaintenanceRequests = async (unit) => {
+export const getMaintenanceRequestsByUnit = async (unit) => {
   let docs = [];
 
   try {
@@ -74,13 +74,45 @@ export const getMaintenanceRequests = async (unit) => {
 
     const requestDocs = await getDocs(requestsQuery);
     requestDocs.forEach((doc) => {
-      docs.push(doc.data());
+      docs.push({
+        id: doc.id,
+        ...doc.data()
+      });
     });
   } catch (error) {
     throw new Error(error.message);
   }
 
   return docs;
+};
+
+export const getAllMaintenanceRequests = async () => {
+  let docs = [];
+
+  try {
+    const requestsRef = collection(db, "maintenance-requests");
+    const requestDocs = await getDocs(requestsRef);
+    requestDocs.forEach((doc) => {
+      docs.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+
+  return docs;
+};
+
+export const updateMaintenanceRequest = async (updateID, updateData) => {
+  try {
+    const updateRef = doc(db, "maintenance-requests", updateID);
+    await updateDoc(updateRef, updateData);
+    return { id: updateID, ...updateData };
+  } catch (error) {
+    throw new Error(error.message);
+  }
 };
 
 export const addNotice = async (noticeData) => {

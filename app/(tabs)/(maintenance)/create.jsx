@@ -24,7 +24,8 @@ const DayButton = ({ day, onSelect, isSelected }) => (
 
 const Create = () => {
   const { user } = useGlobalContext();
-  const unitNumber = user.unit;
+  const unitNumber = user ? user.unit : null;
+
   const [imagePath, setImagePath] = useState([]);
   // const [videoPath, setVideoPath] = useState([]);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -181,7 +182,11 @@ const Create = () => {
         urgent: isUrgent,
         media: imagePath,
         isComplete: false,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
+        scheduled: false,
+        arrivalWindow: "",
+        arrivalNotes:"",
+        invoicePaid: false
       };
       const result = await addMaintenanceRequest(maintenanceRequestData);
 

@@ -10,9 +10,12 @@ import LogoutButton from "../../components/LogoutButton";
 
 const LeaseInfo = () => {
   const [lease, setLease] = useState([]);
+  const [paymentList, setPaymentList] = useState([]);
   const { user } = useGlobalContext();
 
   useEffect(() => {
+    if (!user) return;
+
     const fetchData = async () => {
       try {
         const fetchedData = await getLease(user.unit);
@@ -26,7 +29,7 @@ const LeaseInfo = () => {
   }, []);
 
   useEffect(() => {
-    console.log(lease)
+    setPaymentList(lease.payments);
   }, [lease]);
 
   // const [refreshing, setRefreshing] = useState(false);
@@ -72,19 +75,21 @@ const LeaseInfo = () => {
               containerStyles="w-full"
             />
           }
-          <Text className="flex-2 p-2 text-xl text-center font-pbold text-white bg-gray-800">Lease Info</Text>
-          <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease.unit}</Text>
-          <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Start Date: {lease.startDate}</Text>
-          <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">End Date: {lease.endDate}</Text>
-          <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Payment List:</Text>
+          <View>
+            <Text className="flex-2 p-2 text-xl text-center font-pbold text-white bg-gray-800">Lease Info</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease.unit}</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Start Date: {lease.startDate}</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">End Date: {lease.endDate}</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Payment List:</Text>
+          </View>
           {
-            lease && lease.payments.map((item, index) => (
-              <>
+            paymentList && paymentList.map((item, index) => (
+              <View key={index}>
                 <Text className="flex-1 p-2 text-l text-white bg-gray-800">{item.month}</Text>
                 <Text className="flex-1 p-2 text-l text-white bg-gray-800">Rent Due: ${item.rentAmount}</Text>
                 <Text className="flex-1 p-2 text-l text-white bg-gray-800">{item.isPaid ? "Paid" : "Not Paid"}</Text>
                 <Text className="flex-1 p-2 text-l text-white bg-gray-800">----</Text>
-              </>
+              </View>
             ))
           }
         </View>
