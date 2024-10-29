@@ -183,11 +183,24 @@ export const getAllLeases = async () => {
   return docs;
 };
 
-export const updateLease = async (updateID, updateData) => {
+// export const updateLease = async (updateID, updateData) => {
+//   try {
+//     const updateRef = doc(db, "leases", updateID);
+//     await updateDoc(updateRef, updateData);
+//     return { id: updateID, ...updateData };
+//   } catch (error) {
+//     throw new Error(error.message);
+//   }
+// };
+
+export const updateLease = async (leaseID, month, isPaid) => {
   try {
-    const updateRef = doc(db, "leases", updateID);
-    await updateDoc(updateRef, updateData);
-    return { id: updateID, ...updateData };
+    const updateRef = doc(db, "leases", leaseID);
+    const updateField = `payments.${month}.isPaid`;
+    await updateDoc(updateRef, {
+      [updateField]: isPaid
+    });
+    return { id: leaseID, updatedField: month, isPaid };
   } catch (error) {
     throw new Error(error.message);
   }
