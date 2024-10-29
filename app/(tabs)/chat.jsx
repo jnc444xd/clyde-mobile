@@ -5,6 +5,8 @@ import React, {
   useCallback
 } from 'react';
 import { TouchableOpacity, Text } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+// import { AntDesign } from '@expo/vector-icons';
 import { GiftedChat } from 'react-native-gifted-chat';
 import {
   collection,
@@ -15,12 +17,10 @@ import {
 } from 'firebase/firestore';
 import { signOut } from '../../firebase/auth';
 import { db } from "../../firebase/config";
-import { useNavigation } from '@react-navigation/native';
-// import { AntDesign } from '@expo/vector-icons';
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 
-export default function Chat() {
+const Chat = () => {
 
   const [messages, setMessages] = useState([]);
   // const navigation = useNavigation();
@@ -98,4 +98,6 @@ export default function Chat() {
       }}
     />
   );
-}
+};
+
+export default Chat;

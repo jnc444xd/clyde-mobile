@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, ScrollView, Text, View, RefreshControl } from "react-native";
+import { Image, ScrollView, Text, View, RefreshControl, ActivityIndicator } from "react-native";
 import { router } from "expo-router";
 import { CustomButton } from "../../components";
 import { images } from "../../constants";
@@ -9,14 +9,14 @@ import { getLease } from "../../firebase/database";
 import LogoutButton from "../../components/LogoutButton";
 
 const LeaseInfo = () => {
-  const [lease, setLease] = useState([]);
-  const [paymentList, setPaymentList] = useState([]);
+  const [lease, setLease] = useState(null);
+  const [paymentList, setPaymentList] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { user } = useGlobalContext();
 
   useEffect(() => {
     if (!user) return;
-
     fetchData();
   }, []);
 
@@ -25,22 +25,31 @@ const LeaseInfo = () => {
   // }, [paymentList]);
 
   useEffect(() => {
-    setPaymentList(lease.payments);
+    if (lease) {
+      setPaymentList(lease.payments);
+    }
   }, [lease]);
 
   const fetchData = async () => {
     try {
       const fetchedData = await getLease(user.unit);
       setLease(fetchedData[0]);
+      setLoading(false);
     } catch (error) {
       console.error('Failed to fetch lease: ', error);
+      setLoading(false);
     }
   };
 
   const onRefresh = () => {
     setRefreshing(true);
+    setLoading(true);
     fetchData().then(() => setRefreshing(false));
   };
+
+  if (loading) {
+    return <ActivityIndicator size="large" color="#fff" />;
+  }
 
   const monthOrder = {
     "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5,
@@ -92,9 +101,9 @@ const LeaseInfo = () => {
           }
           <View>
             <Text className="flex-2 p-2 text-xl text-center font-pbold text-white bg-gray-800">Lease Info</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease.unit}</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Start Date: {lease.startDate}</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">End Date: {lease.endDate}</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease ? lease.unit : null}</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Start Date: {lease ? lease.startDate : null}</Text>
+            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">End Date: {lease ? lease.endDate : null}</Text>
             <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Payment List:</Text>
           </View>
           {

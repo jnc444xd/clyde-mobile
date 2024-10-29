@@ -3,9 +3,9 @@ import { StatusBar } from "expo-status-bar";
 import { Loader } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
-const AdminLayout  = () => {
+const AdminLayout = () => {
   const { loading, isLogged, user } = useGlobalContext();
-  
+
   if (!loading && !isLogged) return <Redirect href="/sign-in" />;
   if (!loading && !user.isAdmin) return <Redirect href="/home" />;
 
@@ -32,6 +32,18 @@ const AdminLayout  = () => {
         />
         <Stack.Screen
           name="updatePaymentList"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="adminChatSelect"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="adminChatRoom"
           options={{
             headerShown: false,
           }}

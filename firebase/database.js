@@ -35,6 +35,20 @@ export const getUser = async (userID) => {
   }
 };
 
+export const getAllUsers = async () => {
+  try {
+    const usersCollectionRef = collection(db, "users");
+    const userDocs = await getDocs(usersCollectionRef);
+    const usersList = userDocs.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    }));
+    return usersList;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const updateUser = async (userId, userData) => {
   try {
     const userRef = doc(db, "users", userId);

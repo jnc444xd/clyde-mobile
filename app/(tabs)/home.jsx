@@ -56,6 +56,14 @@ const Home = () => {
           containerStyles="w-full"
         />
       }
+      {
+        user && user.isAdmin &&
+        <CustomButton
+          title="Go to Admin Chat"
+          handlePress={() => router.push("/adminChatSelect")}
+          containerStyles="w-full"
+        />
+      }
       <ScrollView
         contentContainerStyle={{
           height: "100%",
