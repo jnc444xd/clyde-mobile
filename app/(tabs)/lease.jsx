@@ -19,7 +19,7 @@ const LeaseInfo = () => {
     const fetchData = async () => {
       try {
         const fetchedData = await getLease(user.unit);
-
+        console.log(JSON.stringify(fetchedData[0], null, 2));
         setLease(fetchedData[0]);
       } catch (error) {
         console.error('Failed to fetch lease: ', error);
@@ -104,7 +104,7 @@ const LeaseInfo = () => {
                   <Text className="flex-1 p-2 text-l text-white bg-gray-800">----</Text>
                   <Text className="flex-1 p-2 text-l text-white bg-gray-800">{month}</Text>
                   <Text className="flex-1 p-2 text-l text-white bg-gray-800">Rent Due: ${details.rentAmount}</Text>
-                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">{details.isPaid ? "Paid" : "Not Paid"}</Text>
+                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">{details.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
                 </View>
               ))
           }

@@ -66,7 +66,7 @@ const UpdatePaymentList = () => {
         setModalData(selectedUnitData);
 
         const newPaidStatuses = selectedUnitData.reduce((acc, payment) => {
-            acc[payment.month] = payment.isPaid;
+            acc[payment.month] = payment.isPaid.isPaid;
             return acc;
         }, {});
 
@@ -75,7 +75,7 @@ const UpdatePaymentList = () => {
     };
 
     useEffect(() => {
-        console.log(paidStatuses);
+        console.log("December 2024", paidStatuses["December 2024"]);
     }, [paidStatuses]);
 
     const togglePaid = (id) => {
@@ -168,7 +168,7 @@ const UpdatePaymentList = () => {
                                     <View key={index} className="flex-row justify-between bg-gray-800 m-1 p-2">
                                         <Text className="text-white">{paymentDetails.month}</Text>
                                         <Text className="text-white">{`Rent Due: $${paymentDetails.rentAmount}`}</Text>
-                                        <Text className="text-white">{paymentDetails.isPaid ? "Paid" : "Not Paid"}</Text>
+                                        <Text className="text-white">{paymentDetails.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
                                     </View>
                                 ))}
                             </View>

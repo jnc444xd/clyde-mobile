@@ -142,6 +142,7 @@ export const getNotices = async () => {
 export const addLease = async (leaseData) => {
   try {
     const leaseRef = doc(collection(db, "leases"));
+    // console.log(JSON.stringify(leaseData, null, 2));
     await setDoc(leaseRef, leaseData);
     return { id: leaseRef.id, ...leaseData };
   } catch (error) {

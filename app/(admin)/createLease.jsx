@@ -90,6 +90,7 @@ const CreateLease = () => {
                 endDate: endDate.toDateString(),
                 payments: processedPaymentList
             };
+            // console.log(leaseData);
             const result = await addLease(leaseData);
             Alert.alert("Lease created successfully");
             router.replace("/home");
