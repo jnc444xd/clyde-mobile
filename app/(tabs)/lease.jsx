@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, ScrollView, Text, View } from "react-native";
+import { Image, ScrollView, Text, View, RefreshControl } from "react-native";
 import { router } from "expo-router";
 import { CustomButton } from "../../components";
 import { images } from "../../constants";
@@ -11,31 +11,36 @@ import LogoutButton from "../../components/LogoutButton";
 const LeaseInfo = () => {
   const [lease, setLease] = useState([]);
   const [paymentList, setPaymentList] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
   const { user } = useGlobalContext();
 
   useEffect(() => {
     if (!user) return;
 
-    const fetchData = async () => {
-      try {
-        const fetchedData = await getLease(user.unit);
-        console.log(JSON.stringify(fetchedData[0], null, 2));
-        setLease(fetchedData[0]);
-      } catch (error) {
-        console.error('Failed to fetch lease: ', error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  useEffect(() => {
-    console.log(paymentList);
-  }, [paymentList]);
+  // useEffect(() => {
+  //   console.log(paymentList);
+  // }, [paymentList]);
 
   useEffect(() => {
     setPaymentList(lease.payments);
   }, [lease]);
+
+  const fetchData = async () => {
+    try {
+      const fetchedData = await getLease(user.unit);
+      setLease(fetchedData[0]);
+    } catch (error) {
+      console.error('Failed to fetch lease: ', error);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData().then(() => setRefreshing(false));
+  };
 
   const monthOrder = {
     "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5,
@@ -52,6 +57,14 @@ const LeaseInfo = () => {
           flexGrow: 1,
           paddingBottom: 20
         }}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={["#fff"]}
+            tintColor="#fff"
+          />
+        }
       >
         <View className="flex-grow justify-between w-full h-full px-4 my-6">
           <View className="flex-grow justify-center items-center">

@@ -12,6 +12,7 @@ const UpdatePaymentList = () => {
     const [isSubmitting, setSubmitting] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [paidStatuses, setPaidStatuses] = useState({});
+    const [refreshing, setRefreshing] = useState(false);
 
     const { loading, isLogged } = useGlobalContext();
 
@@ -61,6 +62,11 @@ const UpdatePaymentList = () => {
         }
     };
 
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchAllLeases().then(() => setRefreshing(false));
+    };
+
     const openUpdateModal = (unit) => {
         const selectedUnitData = paymentData[unit] ? paymentData[unit].flat() : [];
         setModalData(selectedUnitData);
@@ -73,10 +79,6 @@ const UpdatePaymentList = () => {
         setPaidStatuses(newPaidStatuses);
         setModalVisible(true);
     };
-
-    useEffect(() => {
-        console.log("December 2024", paidStatuses["December 2024"]);
-    }, [paidStatuses]);
 
     const togglePaid = (id) => {
         setPaidStatuses(prev => ({ ...prev, [id]: !prev[id] }));
@@ -99,6 +101,8 @@ const UpdatePaymentList = () => {
         } finally {
             setSubmitting(false);
         }
+
+        if (isSubmitting) return <Redirect href="/lease" />;
     };
 
     return (
@@ -149,6 +153,14 @@ const UpdatePaymentList = () => {
             </Modal>
             <ScrollView
                 className="flex-1 p-4 bg-primary h-full"
+                refreshControl={
+                    <RefreshControl
+                        refreshing={refreshing}
+                        onRefresh={onRefresh}
+                        colors={["#fff"]}
+                        tintColor="#fff"
+                    />
+                }
             >
                 <Image
                     source={images.logo}
