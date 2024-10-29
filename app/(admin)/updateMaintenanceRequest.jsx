@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Redirect, router } from "expo-router";
 import { View, Text, ScrollView, SafeAreaView, Image, RefreshControl, Modal, Button, Switch, TextInput, Alert } from "react-native";
 import { images } from "../../constants";
@@ -6,9 +6,8 @@ import { CustomButton } from "../../components";
 import { getAllMaintenanceRequests, updateMaintenanceRequest } from "../../firebase/database";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
-const Update = () => {
+const UpdateRequests = () => {
     const [maintenanceData, setMaintenanceData] = useState([]);
-    const [refreshing, setRefreshing] = useState(false);
     const [isSubmitting, setSubmitting] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
@@ -30,29 +29,22 @@ const Update = () => {
     const togglePaid = () => setIsPaid(previousState => !previousState);
     const toggleComplete = () => setIsComplete(previousState => !previousState);
 
-    const onRefresh = React.useCallback(() => {
-        setRefreshing(true);
-        setTimeout(() => {
-            setRefreshing(false);
-        }, 2000);
-    }, []);
+    const fetchData = async () => {
+        try {
+            const fetchedData = await getAllMaintenanceRequests();
+
+            const groupedData = fetchedData.reduce((acc, item) => {
+                (acc[item.unit] = acc[item.unit] || []).push(item);
+                return acc;
+            }, {});
+
+            setMaintenanceData(groupedData);
+        } catch (error) {
+            console.error('Failed to fetch data: ', error);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const fetchedData = await getAllMaintenanceRequests();
-
-                const groupedData = fetchedData.reduce((acc, item) => {
-                    (acc[item.unit] = acc[item.unit] || []).push(item);
-                    return acc;
-                }, {});
-
-                setMaintenanceData(groupedData);
-            } catch (error) {
-                console.error('Failed to fetch data: ', error);
-            }
-        };
-
         fetchData();
     }, []);
 
@@ -229,4 +221,4 @@ const Update = () => {
     )
 };
 
-export default Update;
+export default UpdateRequests;

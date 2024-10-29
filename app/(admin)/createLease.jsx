@@ -68,13 +68,14 @@ const CreateLease = () => {
 
     const submit = async () => {
 
-        const processPayments = (paymentsObject) => {
-            const processed = Object.entries(paymentsObject)
-                .map(([key, value]) => ({
-                    month: value.month,
-                    rentAmount: value.rentAmount,
-                    isPaid: value.isPaid
-                }));
+        const processPayments = (paymentsArray) => {
+            const processed = paymentsArray.reduce((acc, payment) => {
+                acc[payment.month] = {
+                    rentAmount: payment.rentAmount,
+                    isPaid: payment.isPaid
+                };
+                return acc;
+            }, {});
 
             return processed;
         }

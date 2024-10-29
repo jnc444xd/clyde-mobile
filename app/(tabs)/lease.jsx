@@ -19,6 +19,7 @@ const LeaseInfo = () => {
     const fetchData = async () => {
       try {
         const fetchedData = await getLease(user.unit);
+
         setLease(fetchedData[0]);
       } catch (error) {
         console.error('Failed to fetch lease: ', error);
@@ -29,24 +30,17 @@ const LeaseInfo = () => {
   }, []);
 
   useEffect(() => {
+    console.log(paymentList);
+  }, [paymentList]);
+
+  useEffect(() => {
     setPaymentList(lease.payments);
   }, [lease]);
 
-  // const [refreshing, setRefreshing] = useState(false);
-
-  // const onRefresh = async () => {
-  //   setRefreshing(true);
-  //   await refetch();
-  //   setRefreshing(false);
-  // };
-
-  // const logout = async () => {
-  //   await signOutUser();
-  //   setUser(null);
-  //   setIsLogged(false);
-
-  //   router.replace("/sign-in");
-  // };
+  const monthOrder = {
+    "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5,
+    "July": 6, "August": 7, "September": 8, "October": 9, "November": 10, "December": 11
+  };
 
   return (
     <SafeAreaView className="bg-primary h-full">
@@ -75,6 +69,14 @@ const LeaseInfo = () => {
               containerStyles="w-full"
             />
           }
+          {
+            user && user.isAdmin &&
+            <CustomButton
+              title="View Payment Lists"
+              handlePress={() => router.push("/updatePaymentList")}
+              containerStyles="w-full"
+            />
+          }
           <View>
             <Text className="flex-2 p-2 text-xl text-center font-pbold text-white bg-gray-800">Lease Info</Text>
             <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease.unit}</Text>
@@ -83,14 +85,28 @@ const LeaseInfo = () => {
             <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Payment List:</Text>
           </View>
           {
-            paymentList && paymentList.map((item, index) => (
-              <View key={index}>
-                <Text className="flex-1 p-2 text-l text-white bg-gray-800">{item.month}</Text>
-                <Text className="flex-1 p-2 text-l text-white bg-gray-800">Rent Due: ${item.rentAmount}</Text>
-                <Text className="flex-1 p-2 text-l text-white bg-gray-800">{item.isPaid ? "Paid" : "Not Paid"}</Text>
-                <Text className="flex-1 p-2 text-l text-white bg-gray-800">----</Text>
-              </View>
-            ))
+            paymentList && Object.entries(paymentList)
+              .sort((a, b) => {
+                const yearMonthA = a[0].split(' ');
+                const yearMonthB = b[0].split(' ');
+                const yearA = parseInt(yearMonthA[1], 10);
+                const yearB = parseInt(yearMonthB[1], 10);
+                const monthA = monthOrder[yearMonthA[0]];
+                const monthB = monthOrder[yearMonthB[0]];
+
+                if (yearA !== yearB) {
+                  return yearA - yearB;
+                }
+                return monthA - monthB;
+              })
+              .map(([month, details], index) => (
+                <View key={index}>
+                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">----</Text>
+                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">{month}</Text>
+                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">Rent Due: ${details.rentAmount}</Text>
+                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">{details.isPaid ? "Paid" : "Not Paid"}</Text>
+                </View>
+              ))
           }
         </View>
       </ScrollView>

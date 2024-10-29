@@ -163,3 +163,32 @@ export const getLease = async (unit) => {
     throw new Error(error.message);
   }
 };
+
+export const getAllLeases = async () => {
+  let docs = [];
+
+  try {
+    const requestsRef = collection(db, "leases");
+    const requestDocs = await getDocs(requestsRef);
+    requestDocs.forEach((doc) => {
+      docs.push({
+        id: doc.id,
+        ...doc.data()
+      });
+    });
+  } catch (error) {
+    throw new Error(error.message);
+  }
+
+  return docs;
+};
+
+export const updateLease = async (updateID, updateData) => {
+  try {
+    const updateRef = doc(db, "leases", updateID);
+    await updateDoc(updateRef, updateData);
+    return { id: updateID, ...updateData };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};

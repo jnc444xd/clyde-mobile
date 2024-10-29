@@ -30,6 +30,12 @@ const AdminLayout  = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="updatePaymentList"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
 
       <Loader isLoading={loading} />
