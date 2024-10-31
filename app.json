@@ -1,5 +1,6 @@
 {
   "expo": {
+    "owner": "jnc444xd",
     "name": "Clyde Ave",
     "slug": "clyde-ave",
     "version": "1.0.0",
@@ -31,9 +32,15 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "extra": {
+      "eas": {
+        "projectId": "9b5266a8-337e-4721-bafe-a2bed096f378"
+      }
+    },
     "plugins": [
       "expo-router",
       "expo-font"
-    ]
+    ],
+    "scheme": "clydeave"
   }
 }

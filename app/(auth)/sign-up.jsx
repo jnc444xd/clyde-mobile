@@ -17,7 +17,7 @@ const SignUp = () => {
     unit: "",
     email: "",
     accountID: "",
-    password: "",
+    password: ""
   });
 
   const submit = async () => {
@@ -32,6 +32,7 @@ const SignUp = () => {
         lastName: form.lastName,
         unit: form.unit,
         accountID: form.accountID,
+        expoPushToken: "",
         isAdmin: false
       };
       const result = await signUp(form.email, form.password, userData);

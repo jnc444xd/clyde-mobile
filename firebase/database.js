@@ -49,11 +49,21 @@ export const getAllUsers = async () => {
   }
 };
 
-export const updateUser = async (userId, userData) => {
+export const updateUser = async (userID, userData) => {
   try {
-    const userRef = doc(db, "users", userId);
+    const userRef = doc(db, "users", userID);
     await updateDoc(userRef, userData);
-    return { id: userId, ...userData };
+    return { id: userID, ...userData };
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const updateUserPushToken = async (userID, expoPushToken) => {
+  try {
+    const userRef = doc(db, "users", userID);
+    await updateDoc(userRef, { expoPushToken });
+    return { id: userID, expoPushToken };
   } catch (error) {
     throw new Error(error.message);
   }
