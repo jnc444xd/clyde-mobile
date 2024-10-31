@@ -37,7 +37,7 @@ export default () => ({
     },
     extra: {
       eas: {
-        projectId: "9b5266a8-337e-4721-bafe-a2bed096f378"
+        projectId: process.env.EXPO_PROJECT_ID
       },
       firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY,
