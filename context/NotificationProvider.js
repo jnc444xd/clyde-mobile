@@ -53,20 +53,17 @@ const NotificationProvider = ({ children, userId }) => {
 
   useEffect(() => {
     if (user?.uid) {
-      console.log("user found", user.uid);
       const handleTokenUpdate = async () => {
         try {
           const expoPushToken = await registerForPushNotificationsAsync();
           await updateUserPushToken(user.uid, expoPushToken);
-          console.log("Expo Push Token Updated:", expoPushToken);
+          console.log("Expo Push Token Updated!");
         } catch (error) {
           console.error("Error updating push token:", error);
         }
       };
 
       handleTokenUpdate();
-    } else {
-      console.log("no user");
     }
   }, [user]);
 

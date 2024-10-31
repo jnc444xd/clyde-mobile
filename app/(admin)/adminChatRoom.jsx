@@ -1,16 +1,14 @@
-import { useState, useEffect } from "react";
-import { ScrollView, Text, View, RefreshControl } from "react-native";
-import { useNavigation, useRouter, useLocalSearchParams } from "expo-router";
-
+import { useLocalSearchParams } from "expo-router";
 import ChatRoom from "../../components/ChatRoom";
 
 const AdminChatRoom = () => {
     const params = useLocalSearchParams();
-    const { chatroomID } = params;
+    const { chatroomID, recipientID } = params;
 
     return (
         <ChatRoom
             chatroomID={chatroomID}
+            recipientID={recipientID}
         />
     )
 };

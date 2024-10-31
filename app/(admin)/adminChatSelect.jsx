@@ -1,9 +1,4 @@
-import React, {
-    useState,
-    useEffect,
-    useLayoutEffect,
-    useCallback
-} from 'react';
+import React, { useState, useEffect } from 'react';
 import { TouchableOpacity, Text, SafeAreaView, View } from 'react-native';
 import { router } from "expo-router"
 import { getAllUsers } from "../../firebase/database";
@@ -25,7 +20,6 @@ const AdminChatSelect = () => {
             }, {});
 
             const filteredData = extractUserDetails(groupedData);
-            console.log(filteredData);
 
             setUsers(filteredData);
         } catch (error) {
@@ -39,7 +33,8 @@ const AdminChatSelect = () => {
             result[unit] = users.map(user => ({
                 firstName: user.firstName,
                 lastName: user.lastName,
-                accountID: user.accountID
+                accountID: user.accountID,
+                id: user.id
             }));
         });
         return result;
@@ -57,7 +52,7 @@ const AdminChatSelect = () => {
                                 <TouchableOpacity
                                     key={index}
                                     onPress={() => {
-                                        router.push({ pathname: "/adminChatRoom", params: { chatroomID: user.accountID } });
+                                        router.push({ pathname: "/adminChatRoom", params: { chatroomID: user.accountID, recipientID: user.id } });
                                     }}
                                     style={{ backgroundColor: 'white', padding: 10, marginBottom: 5, borderRadius: 5, elevation: 1 }}
                                 >

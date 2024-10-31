@@ -19,7 +19,7 @@ import { db } from "../firebase/config";
 import { useGlobalContext } from "../context/GlobalProvider";
 
 
-const ChatRoom = ({ chatroomID }) => {
+const ChatRoom = ({ chatroomID, recipientID }) => {
 
     const [messages, setMessages] = useState([]);
     // const navigation = useNavigation();
@@ -50,7 +50,6 @@ const ChatRoom = ({ chatroomID }) => {
         const q = query(chatRef, orderBy('createdAt', 'desc'));
 
         const unsubscribe = onSnapshot(q, querySnapshot => {
-            console.log('querySnapshot unsusbscribe');
             setMessages(
                 querySnapshot.docs.map(doc => ({
                     _id: doc.data()._id,
@@ -73,7 +72,8 @@ const ChatRoom = ({ chatroomID }) => {
             _id,
             createdAt,
             text,
-            user
+            user,
+            recipientID: recipientID
         });
     }, []);
 

@@ -46,7 +46,8 @@ export default () => ({
         storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
         messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
         appId: process.env.FIREBASE_APP_ID
-      }
+      },
+      adminUID: process.env.REACT_APP_ADMIN_UID
     },
     plugins: [
       "expo-router",
