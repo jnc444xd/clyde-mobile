@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import { View, Text, ScrollView, Dimensions, Alert, Image, ImageBackground } from "react-native";
 import { images } from "../../constants";
 import { CustomButton, FormField } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
@@ -37,59 +37,57 @@ const SignIn = () => {
 
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView>
-        <View
-          className="w-full flex justify-center items-center h-full px-4 my-6"
-          style={{
-            minHeight: Dimensions.get("window").height - 100,
-          }}
-        >
-          <Image
-            source={images.logo}
-            resizeMode="contain"
-            className="w-[300] h-auto"
-          />
-          <View className="w-full flex justify-start items-start">
-            <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-              Welcome home! 👋
-            </Text>
+      <ImageBackground
+        source={images.altBackground}
+        className="flex-1"
+        style={{ flex: 1 }}
+        resizeMode="cover"
+      >
+        <ScrollView className="flex-1 px-4">
+          <View className="items-center justify-center pt-20 pb-10">
+            <Image
+              source={images.logo}
+              resizeMode="contain"
+              className="w-[300px] h-auto mt-10"
+            />
+            <View className="flex-row justify-start items-start w-full">
+              <Text className="text-2xl font-semibold text-white mb-3">
+                Welcome home! 👋
+              </Text>
+            </View>
+            <FormField
+              title="Email"
+              value={form.email}
+              handleChangeText={(e) => setForm({ ...form, email: e })}
+              otherStyles="mt-4"
+              keyboardType="email-address"
+            />
+            <FormField
+              title="Password"
+              value={form.password}
+              handleChangeText={(e) => setForm({ ...form, password: e })}
+              otherStyles="mt-4"
+            />
+            <CustomButton
+              title="Sign In"
+              handlePress={submit}
+              containerStyles="mt-4 w-full"
+              isLoading={isSubmitting}
+            />
+            <View className="flex-row justify-center mt-5">
+              <Text className="text-lg text-gray-100">
+                Don't have an account?
+              </Text>
+              <Link
+                href="/sign-up"
+                className="text-lg text-secondary font-semibold"
+              >
+                Signup
+              </Link>
+            </View>
           </View>
-
-          <FormField
-            title="Email"
-            value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7"
-            keyboardType="email-address"
-          />
-
-          <FormField
-            title="Password"
-            value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7"
-          />
-
-          <CustomButton
-            title="Sign In"
-            handlePress={submit}
-            containerStyles="mt-7 w-full"
-            isLoading={isSubmitting}
-          />
-
-          <View className="flex justify-center pt-5 flex-row gap-2">
-            <Text className="text-lg text-gray-100 font-pregular">
-              Don't have an account?
-            </Text>
-            <Link
-              href="/sign-up"
-              className="text-lg font-psemibold text-secondary"
-            >
-              Signup
-            </Link>
-          </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 };

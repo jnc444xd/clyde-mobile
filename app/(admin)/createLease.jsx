@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { SafeAreaView, ScrollView, View, Text, Alert, Image, Button } from "react-native";
+import { SafeAreaView, ScrollView, View, Text, Alert, Image, Button, ImageBackground } from "react-native";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { router } from "expo-router";
 import { images } from "../../constants";
@@ -102,83 +102,89 @@ const CreateLease = () => {
     };
 
     return (
-        <SafeAreaView className="bg-primary h-full">
-            <ScrollView>
-                <View className="w-full flex justify-center h-full px-4 my-6">
-                    <Image source={images.logo} resizeMode="contain" className="w-[460] h-[136px]" />
-                    <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">Create Lease:</Text>
+        <SafeAreaView className="bg-primary h-full flex-1">
+            <ImageBackground
+                source={images.altBackground}
+                className="flex-1"
+                style={{ flex: 1 }}
+                resizeMode="cover"
+            >
+                <ScrollView>
+                    <View className="w-full flex justify-center h-full px-4 mt-[100]">
+                        <Text className="text-2xl font-semibold text-white font-psemibold">Create Lease:</Text>
 
-                    <FormField
-                        title="Unit Number"
-                        value={form.unitNumber}
-                        handleChangeText={(e) => setForm({ ...form, unitNumber: e })}
-                        otherStyles="mt-7"
-                        keyboardType="number-pad"
-                    />
-
-                    <Text className="text-l text-white">Start: {startDate.toLocaleString()}</Text>
-                    {!showStart && <Button onPress={showStartDatePicker} title="Select Start Date" />}
-                    {showStart && (
-                        <DateTimePicker
-                            modale
-                            testID="startDatePicker"
-                            value={startDate}
-                            mode="date"
-                            onChange={onStartChange}
+                        <FormField
+                            title="Unit Number"
+                            value={form.unitNumber}
+                            handleChangeText={(e) => setForm({ ...form, unitNumber: e })}
+                            otherStyles="my-7"
+                            keyboardType="number-pad"
                         />
-                    )}
 
-                    <Text className="text-l text-white">End: {endDate.toLocaleString()}</Text>
-                    {!showEnd && <Button onPress={showEndDatePicker} title="Select End Date" />}
-                    {showEnd && (
-                        <DateTimePicker
-                            modal
-                            testID="endDatePicker"
-                            value={endDate}
-                            mode="date"
-                            onChange={onEndChange}
+                        <Text className="text-l text-white">Start: {startDate.toLocaleString()}</Text>
+                        {!showStart && <Button onPress={showStartDatePicker} title="Select Start Date" />}
+                        {showStart && (
+                            <DateTimePicker
+                                modale
+                                testID="startDatePicker"
+                                value={startDate}
+                                mode="date"
+                                onChange={onStartChange}
+                            />
+                        )}
+
+                        <Text className="text-l text-white">End: {endDate.toLocaleString()}</Text>
+                        {!showEnd && <Button onPress={showEndDatePicker} title="Select End Date" />}
+                        {showEnd && (
+                            <DateTimePicker
+                                modal
+                                testID="endDatePicker"
+                                value={endDate}
+                                mode="date"
+                                onChange={onEndChange}
+                            />
+                        )}
+
+                        <FormField
+                            title="Rent Amount"
+                            value={form.rentAmount}
+                            handleChangeText={(e) => setForm({ ...form, rentAmount: e })}
+                            otherStyles="mt-7"
                         />
-                    )}
 
-                    <FormField
-                        title="Rent Amount"
-                        value={form.rentAmount}
-                        handleChangeText={(e) => setForm({ ...form, rentAmount: e })}
-                        otherStyles="mt-7"
-                    />
+                        {payments.length > 0 &&
+                            <>
+                                <Text className="text-xl text-white mt-10 text-pregular">Payment List Created!</Text>
+                                <CustomButton
+                                    title="Regenerate Payments"
+                                    handlePress={() => generatePayments(startDate, endDate, form.rentAmount)}
+                                    containerStyles="mt-7"
+                                    isLoading={isSubmitting}
+                                />
+                            </>
+                        }
 
-                    {payments.length > 0 &&
-                        <>
-                            <Text className="text-xl text-white mt-10 text-pregular">Payment List Created!</Text>
+                        {payments.length === 0 &&
                             <CustomButton
-                                title="Regenerate Payments"
+                                title="Generate Payments"
                                 handlePress={() => generatePayments(startDate, endDate, form.rentAmount)}
                                 containerStyles="mt-7"
                                 isLoading={isSubmitting}
                             />
-                        </>
-                    }
+                        }
 
-                    {payments.length === 0 &&
-                        <CustomButton
-                            title="Generate Payments"
-                            handlePress={() => generatePayments(startDate, endDate, form.rentAmount)}
-                            containerStyles="mt-7"
-                            isLoading={isSubmitting}
-                        />
-                    }
+                        {payments.length > 0 &&
+                            <CustomButton
+                                title="Save"
+                                handlePress={submit}
+                                containerStyles="mt-7"
+                                isLoading={isSubmitting}
+                            />
+                        }
 
-                    {payments.length > 0 &&
-                        <CustomButton
-                            title="Save"
-                            handlePress={submit}
-                            containerStyles="mt-7"
-                            isLoading={isSubmitting}
-                        />
-                    }
-
-                </View>
-            </ScrollView>
+                    </View>
+                </ScrollView>
+            </ImageBackground>
         </SafeAreaView>
     );
 };

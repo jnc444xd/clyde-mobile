@@ -230,14 +230,14 @@ const Create = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className="w-full h-full flex justify-center h-full px-4"
         >
           <Image
             source={images.logo}
             resizeMode="contain"
-            className="w-[460] h-[136px]"
+            className="w-[200] h-auto mt-[-80]"
           />
-          <Text className="text-2xl text-white mt-10 font-psemibold">
+          <Text className="text-2xl text-white font-psemibold mt-[-80]">
             Maintenance Request Form:
           </Text>
           <View>
@@ -314,12 +314,14 @@ const Create = () => {
               onError={(e) => console.log(e)}
             />
           } */}
-          <CustomButton
-            title="Submit"
-            handlePress={submit}
-            containerStyles="mt-7"
-            isLoading={isSubmitting}
-          />
+          <View className="w-full flex-row justify-center">
+            <CustomButton
+              title="Submit"
+              handlePress={submit}
+              containerStyles="mt-7 w-[100]"
+              isLoading={isSubmitting}
+            />
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>

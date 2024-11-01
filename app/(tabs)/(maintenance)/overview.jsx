@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Redirect, router } from "expo-router";
-import { View, Text, ScrollView, SafeAreaView, Image, RefreshControl, Modal, Button } from "react-native";
+import { View, Text, ScrollView, SafeAreaView, Image, RefreshControl, Modal, Button, ImageBackground } from "react-native";
 import { images } from "../../../constants";
 import { CustomButton } from "../../../components";
 import { getMaintenanceRequestsByUnit } from "../../../firebase/database";
@@ -61,106 +61,112 @@ const Overview = () => {
     }
 
     return (
-        <SafeAreaView className="bg-primary h-full">
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    setModalVisible(!modalVisible);
-                }}
+        <SafeAreaView className="bg-primary h-full flex-1">
+            <ImageBackground
+                source={images.altBackground}
+                className="flex-1"
+                resizeMode="cover"
             >
-                <View style={{ marginTop: 50, marginHorizontal: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
-                    {
-                        arrivalWindow &&
-                        <View>
-                            <Text className="text-base text-black font-pmedium">Arrival Window:</Text>
-                            <Text className="text-base text-black font-pmedium">{arrivalWindow}</Text>
-                        </View>
-                    }
-                    {
-                        arrivalNotes &&
-                        <View>
-                            <Text className="text-base text-black font-pmedium">Notes:</Text>
-                            <Text className="text-base text-black font-pmedium">{arrivalNotes}</Text>
-                        </View>
-                    }
-                    <Button
-                        title="Close"
-                        onPress={() => setModalVisible(!modalVisible)}
-                    />
-                </View>
-            </Modal>
-            <ScrollView
-                className="flex-1 p-4 bg-primary h-full"
-                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
-                refreshControl={
-                    <RefreshControl
-                        refreshing={refreshing}
-                        onRefresh={onRefresh}
-                        colors={["#9Bd35A", "#689F38"]} // Android
-                        tintColor="#689F38" // iOS
-                        title="Loading..." // iOS
-                        titleColor="#000" // iOS
-                    />
-                }
-            >
-                <Image
-                    source={images.logo}
-                    resizeMode="contain"
-                    className="w-[300] h-auto"
-                />
-                <Text className="text-2xl font-semibold text-white mt-10 font-psemibold m-4">
-                    Maintenance Requests
-                </Text>
-                <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-                    <View>
-                        <View className="flex-row border-b border-gray-300">
-                            <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Scheduling</Text>
-                            <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Urgent?</Text>
-                            <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">Description</Text>
-                            <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Location</Text>
-                            <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">Availability</Text>
-                            <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Image Reference</Text>
-                            <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Status</Text>
-                        </View>
-                        {maintenanceData && maintenanceData.map((item, index) => (
-                            <View key={index} className="flex-row border-b border-gray-300">
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">
-                                    {item.scheduled ?
-                                        <Button
-                                            title="Details"
-                                            onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes)}
-                                        />
-                                        :
-                                        'In Progress'
-                                    }
-                                </Text>
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.urgent ? 'Yes' : 'No'}</Text>
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.description}</Text>
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.location}</Text>
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.availability.join('\n')}</Text>
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.media.length > 0 ? 'Yes' : 'No'}</Text>
-                                <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.isComplete ? 'Complete' : 'Pending'}</Text>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        Alert.alert("Modal has been closed.");
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={{ marginTop: 50, marginHorizontal: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
+                        {
+                            arrivalWindow &&
+                            <View>
+                                <Text className="text-base text-black font-pmedium">Arrival Window:</Text>
+                                <Text className="text-base text-black font-pmedium">{arrivalWindow}</Text>
                             </View>
-                        ))}
+                        }
+                        {
+                            arrivalNotes &&
+                            <View>
+                                <Text className="text-base text-black font-pmedium">Notes:</Text>
+                                <Text className="text-base text-black font-pmedium">{arrivalNotes}</Text>
+                            </View>
+                        }
+                        <Button
+                            title="Close"
+                            onPress={() => setModalVisible(!modalVisible)}
+                        />
                     </View>
-                </ScrollView>
-                {
-                    user && !user.isAdmin &&
-                    <CustomButton
+                </Modal>
+                <ScrollView
+                    className="h-full"
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            colors={["#FFF", "#FFF"]} // Android
+                            tintColor="#FFF" // iOS
+                            title="Loading..." // iOS
+                            titleColor="#000" // iOS
+                        />
+                    }
+                >
+                    <Image
+                        source={images.logo}
+                        resizeMode="contain"
+                        className="w-[300] h-auto mt-[100]"
+                    />
+                    <Text className="text-2xl font-semibold text-white font-psemibold mb-4 mt-[-50]">
+                        Maintenance Requests
+                    </Text>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
+                        <View>
+                            <View className="flex-row border-b border-gray-300">
+                                <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Scheduling</Text>
+                                <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Urgent?</Text>
+                                <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">Description</Text>
+                                <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Location</Text>
+                                <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">Availability</Text>
+                                <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Image Reference</Text>
+                                <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Status</Text>
+                            </View>
+                            {maintenanceData && maintenanceData.map((item, index) => (
+                                <View key={index} className="flex-row border-b border-gray-300">
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">
+                                        {item.scheduled ?
+                                            <Button
+                                                title="Details"
+                                                onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes)}
+                                            />
+                                            :
+                                            'In Progress'
+                                        }
+                                    </Text>
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.urgent ? 'Yes' : 'No'}</Text>
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.description}</Text>
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.location}</Text>
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.availability.join('\n')}</Text>
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.media.length > 0 ? 'Yes' : 'No'}</Text>
+                                    <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.isComplete ? 'Complete' : 'Pending'}</Text>
+                                </View>
+                            ))}
+                        </View>
+                    </ScrollView>
+                    {
+                        user && !user.isAdmin &&
+                        <CustomButton
+                            title="Create New"
+                            handlePress={() => router.push("/create")}
+                            containerStyles="w-[150]"
+                        />
+                    }
+                    {/* <CustomButton
                         title="Create New Maintenance Request"
                         handlePress={() => router.push("/create")}
                         containerStyles="w-full"
-                    />
-                }
-                {/* <CustomButton
-                    title="Create New Maintenance Request"
-                    handlePress={() => router.push("/create")}
-                    containerStyles="w-full"
-                /> */}
-            </ScrollView>
+                    /> */}
+                </ScrollView>
+            </ImageBackground>
         </SafeAreaView>
     )
 };

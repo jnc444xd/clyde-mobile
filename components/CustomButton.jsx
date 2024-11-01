@@ -14,10 +14,10 @@ const CustomButton = ({
       className={`bg-secondary rounded-xl min-h-[62px] flex flex-row justify-center items-center ${containerStyles} ${
         isLoading ? "opacity-50" : ""
       }`}
-      style={{ backgroundColor: '#FDDA0D' }}
+      style={{ backgroundColor: '#FFF' }}
       disabled={isLoading}
     >
-      <Text className={`text-primary font-psemibold text-lg ${textStyles}`}>
+      <Text className={`text-black font-psemibold text-lg ${textStyles}`}>
         {title}
       </Text>
 

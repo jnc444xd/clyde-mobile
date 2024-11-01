@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Image, ScrollView, Text, View, RefreshControl, ActivityIndicator } from "react-native";
+import { Image, ScrollView, Text, View, RefreshControl, ImageBackground } from "react-native";
 import { router } from "expo-router";
 import { CustomButton } from "../../components";
 import { images } from "../../constants";
@@ -58,65 +58,72 @@ const LeaseInfo = () => {
   };
 
   return (
-    <SafeAreaView className="bg-primary h-full">
-      <View className="flex flex-row justify-end p-8">
-        <LogoutButton />
-      </View>
-      <ScrollView
-        contentContainerStyle={{
-          flexGrow: 1,
-          paddingBottom: 20
-        }}
-        refreshControl={
-          <RefreshControl
-            refreshing={refreshing}
-            onRefresh={onRefresh}
-            colors={["#fff"]}
-            tintColor="#fff"
-          />
-        }
+    <SafeAreaView className="bg-primary h-full flex-1">
+      <ImageBackground
+        source={images.altBackground}
+        className="flex-1"
+        style={{ flex: 1 }}
+        resizeMode="cover"
       >
-        <View className="flex-grow justify-between w-full h-full px-4 my-6">
-          <View className="flex-grow justify-center items-center">
-            <Image
-              source={images.logo}
-              className="w-[300] h-auto"
-              resizeMode="contain"
-            />
-          </View>
-          <View>
-            <Text className="flex-2 p-2 text-xl text-center font-pbold text-white bg-gray-800">Lease Info</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Unit {lease ? lease.unit : null}</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Start Date: {lease ? lease.startDate : null}</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">End Date: {lease ? lease.endDate : null}</Text>
-            <Text className="flex-1 p-2 text-xl text-white font-psemibold bg-gray-800">Payment List:</Text>
-          </View>
-          {
-            paymentList && Object.entries(paymentList)
-              .sort((a, b) => {
-                const yearMonthA = a[0].split(' ');
-                const yearMonthB = b[0].split(' ');
-                const yearA = parseInt(yearMonthA[1], 10);
-                const yearB = parseInt(yearMonthB[1], 10);
-                const monthA = monthOrder[yearMonthA[0]];
-                const monthB = monthOrder[yearMonthB[0]];
-
-                if (yearA !== yearB) {
-                  return yearA - yearB;
-                }
-                return monthA - monthB;
-              })
-              .map(([month, details], index) => (
-                <View key={index}>
-                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">----</Text>
-                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">{month}</Text>
-                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">Rent Due: ${details.rentAmount}</Text>
-                  <Text className="flex-1 p-2 text-l text-white bg-gray-800">{details.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
-                </View>
-              ))
-          }
+        <View className="flex flex-row justify-start p-8">
+          <LogoutButton />
         </View>
-      </ScrollView>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 20
+          }}
+          refreshControl={
+            <RefreshControl
+              refreshing={refreshing}
+              onRefresh={onRefresh}
+              colors={["#fff"]}
+              tintColor="#fff"
+            />
+          }
+        >
+          <View className="flex-grow justify-center w-full h-full px-4">
+            <View className="flex-grow justify-center items-center">
+              <Image
+                source={images.logo}
+                className="w-[300] h-auto mb-[50]"
+                resizeMode="contain"
+              />
+            </View>
+            <View className="mt-[-150] mb-[150]">
+              <Text className="flex-2 p-2 text-2xl text-center font-pbold text-white">Lease Info</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular">Unit {lease ? lease.unit : null}</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular">Start Date: {lease ? lease.startDate : null}</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular">End Date: {lease ? lease.endDate : null}</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular">Payment List:</Text>
+            </View>
+            {
+              paymentList && Object.entries(paymentList)
+                .sort((a, b) => {
+                  const yearMonthA = a[0].split(' ');
+                  const yearMonthB = b[0].split(' ');
+                  const yearA = parseInt(yearMonthA[1], 10);
+                  const yearB = parseInt(yearMonthB[1], 10);
+                  const monthA = monthOrder[yearMonthA[0]];
+                  const monthB = monthOrder[yearMonthB[0]];
+
+                  if (yearA !== yearB) {
+                    return yearA - yearB;
+                  }
+                  return monthA - monthB;
+                })
+                .map(([month, details], index) => (
+                  <View key={index}>
+                    <Text className="flex-1 p-2 text-l text-white">----</Text>
+                    <Text className="flex-1 p-2 text-l text-white">{month}</Text>
+                    <Text className="flex-1 p-2 text-l text-white">Rent Due: ${details.rentAmount}</Text>
+                    <Text className="flex-1 p-2 text-l text-white">{details.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
+                  </View>
+                ))
+            }
+          </View>
+        </ScrollView>
+      </ImageBackground>
     </SafeAreaView>
   );
 };

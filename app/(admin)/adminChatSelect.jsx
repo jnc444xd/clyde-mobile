@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TouchableOpacity, Text, SafeAreaView, View } from 'react-native';
+import { TouchableOpacity, Text, SafeAreaView, View, ImageBackground } from 'react-native';
 import { router } from "expo-router"
 import { getAllUsers } from "../../firebase/database";
+import { images } from "../../constants/";
 
 const AdminChatSelect = () => {
     const [users, setUsers] = useState(null);
@@ -41,28 +42,35 @@ const AdminChatSelect = () => {
     };
 
     return (
-        <SafeAreaView className="bg-primary h-full">
-            <View>
-                <Text className="text-white font-psemibold text-4xl text-center m-5">Users List</Text>
-                {
-                    users && Object.entries(users).map(([unit, userArray]) => (
-                        <View key={unit}>
-                            <Text className="text-white text-lg font-psemibold mb-3">Unit {unit}</Text>
-                            {userArray.map((user, index) => (
-                                <TouchableOpacity
-                                    key={index}
-                                    onPress={() => {
-                                        router.push({ pathname: "/adminChatRoom", params: { chatroomID: user.accountID, recipientID: user.id } });
-                                    }}
-                                    style={{ backgroundColor: 'white', padding: 10, marginBottom: 5, borderRadius: 5, elevation: 1 }}
-                                >
-                                    <Text>{user.firstName} {user.lastName}</Text>
-                                </TouchableOpacity>
-                            ))}
-                        </View>
-                    ))
-                }
-            </View>
+        <SafeAreaView className="bg-primary h-full flex-1">
+            <ImageBackground
+                source={images.altBackground}
+                className="flex-1"
+                style={{ flex: 1 }}
+                resizeMode="cover"
+            >
+                <View className="mt-[100]">
+                    <Text className="text-white font-psemibold text-4xl text-center m-5">Users List</Text>
+                    {
+                        users && Object.entries(users).map(([unit, userArray]) => (
+                            <View key={unit}>
+                                <Text className="text-white text-lg font-psemibold mb-3">Unit {unit}</Text>
+                                {userArray.map((user, index) => (
+                                    <TouchableOpacity
+                                        key={index}
+                                        onPress={() => {
+                                            router.push({ pathname: "/adminChatRoom", params: { chatroomID: user.accountID, recipientID: user.id } });
+                                        }}
+                                        style={{ backgroundColor: 'white', padding: 10, marginBottom: 5, borderRadius: 5, elevation: 1 }}
+                                    >
+                                        <Text>{user.firstName} {user.lastName}</Text>
+                                    </TouchableOpacity>
+                                ))}
+                            </View>
+                        ))
+                    }
+                </View>
+            </ImageBackground>
         </SafeAreaView>
     );
 };

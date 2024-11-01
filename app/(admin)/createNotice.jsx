@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, ScrollView, Dimensions, Alert, Image } from "react-native";
+import { View, Text, ScrollView, Dimensions, Alert, Image, ImageBackground } from "react-native";
 import { images } from "../../constants";
 import { addNotice } from "../../firebase/database";
 import { CustomButton, FormField } from "../../components";
@@ -38,43 +38,39 @@ const createNotice = () => {
     };
 
     return (
-        <SafeAreaView className="bg-primary h-full">
-            <ScrollView>
-                <View
-                    className="w-full flex justify-center h-full px-4 my-6"
-                >
-                    <Image
-                        source={images.logo}
-                        resizeMode="contain"
-                        className="w-[460] h-[136px]"
-                    />
-
-                    <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-                        Create notice:
-                    </Text>
-
-                    <FormField
-                        title="Title"
-                        value={form.title}
-                        handleChangeText={(e) => setForm({ ...form, title: e })}
-                        otherStyles="mt-7"
-                    />
-
-                    <FormField
-                        title="Message"
-                        value={form.message}
-                        handleChangeText={(e) => setForm({ ...form, message: e })}
-                        otherStyles="mt-7"
-                    />
-
-                    <CustomButton
-                        title="Save"
-                        handlePress={submit}
-                        containerStyles="mt-7"
-                        isLoading={isSubmitting}
-                    />
-                </View>
-            </ScrollView>
+        <SafeAreaView className="bg-primary h-full flex-1">
+            <ImageBackground
+                source={images.altBackground}
+                className="flex-1"
+                style={{ flex: 1 }}
+                resizeMode="cover"
+            >
+                <ScrollView>
+                    <View className="w-full flex justify-center h-full px-4 mt-[100]">
+                        <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+                            Create notice:
+                        </Text>
+                        <FormField
+                            title="Title"
+                            value={form.title}
+                            handleChangeText={(e) => setForm({ ...form, title: e })}
+                            otherStyles="mt-7"
+                        />
+                        <FormField
+                            title="Message"
+                            value={form.message}
+                            handleChangeText={(e) => setForm({ ...form, message: e })}
+                            otherStyles="mt-7"
+                        />
+                        <CustomButton
+                            title="Save"
+                            handlePress={submit}
+                            containerStyles="mt-7"
+                            isLoading={isSubmitting}
+                        />
+                    </View>
+                </ScrollView>
+            </ImageBackground>
         </SafeAreaView>
     );
 };
