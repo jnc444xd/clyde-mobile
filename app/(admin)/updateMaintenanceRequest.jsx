@@ -61,8 +61,8 @@ const UpdateRequests = () => {
     };
 
     const submit = async (updateID) => {
-        if (form.arrivalWindow === "") {
-            Alert.alert("Error", "Please fill in all fields");
+        if (form.arrivalWindow === "" && form.arrivalNotes === "") {
+            Alert.alert("Error", "Please fill in at least one field");
             return;
         }
 

@@ -58,14 +58,20 @@ const Overview = () => {
                 }}
             >
                 <View style={{ marginTop: 50, marginHorizontal: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
-                    <View>
-                        <Text className="text-base text-black font-pmedium">Arrival Window:</Text>
-                        <Text className="text-base text-black font-pmedium">{arrivalWindow}</Text>
-                    </View>
-                    <View>
-                        <Text className="text-base text-black font-pmedium">Notes:</Text>
-                        <Text className="text-base text-black font-pmedium">{arrivalNotes}</Text>
-                    </View>
+                    {
+                        arrivalWindow &&
+                        <View>
+                            <Text className="text-base text-black font-pmedium">Arrival Window:</Text>
+                            <Text className="text-base text-black font-pmedium">{arrivalWindow}</Text>
+                        </View>
+                    }
+                    {
+                        arrivalNotes &&
+                        <View>
+                            <Text className="text-base text-black font-pmedium">Notes:</Text>
+                            <Text className="text-base text-black font-pmedium">{arrivalNotes}</Text>
+                        </View>
+                    }
                     <Button
                         title="Close"
                         onPress={() => setModalVisible(!modalVisible)}

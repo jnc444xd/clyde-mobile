@@ -44,7 +44,20 @@ const NotificationProvider = ({ children, userId }) => {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log("Notification Clicked:", response);
-      router.push('/chat');
+      const { data } = response.notification.request.content;
+      console.log("response data: ", data.type);
+
+      switch (data.type) {
+        case "chat":
+          router.push("/chat");
+          break;
+        case "maintenance":
+          router.push("/overview");
+          break;
+        default:
+          router.push("/home");
+          break;
+      }
     });
 
     return () => {
