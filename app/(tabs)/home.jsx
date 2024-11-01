@@ -58,11 +58,11 @@ const Home = () => {
         <View className="flex flex-row justify-start p-8">
           <LogoutButton />
         </View>
-        <View className="flex-grow justify-center items-center">
+        <View className="flex-row justify-start w-full ml-6">
           <Image
-            source={images.logo}
-            className="w-[300px] h-auto"
+            source={images.logoSmall}
             resizeMode="contain"
+            className="w-[100px] h-auto mt-[-450] mb-[-450]"
           />
         </View>
         <Text className="font-pmedium text-2xl text-gray-100 mx-5">

@@ -111,16 +111,18 @@ const Overview = () => {
                         />
                     }
                 >
-                    <Image
-                        source={images.logo}
-                        resizeMode="contain"
-                        className="w-[300] h-auto mt-[100]"
-                    />
+                    <View className="flex-row justify-start w-full ml-[50]">
+                        <Image
+                            source={images.logoSmall}
+                            resizeMode="contain"
+                            className="w-[100px] h-auto mt-[-400] mb-[-400]"
+                        />
+                    </View>
                     <Text className="text-2xl font-semibold text-white font-psemibold mb-4 mt-[-50]">
                         Maintenance Requests
                     </Text>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-                        <View>
+                        <View className="mx-2">
                             <View className="flex-row border-b border-gray-300">
                                 <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Scheduling</Text>
                                 <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Urgent?</Text>

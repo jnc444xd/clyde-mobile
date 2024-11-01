@@ -83,15 +83,15 @@ const LeaseInfo = () => {
           }
         >
           <View className="flex-grow justify-center w-full h-full px-4">
-            <View className="flex-grow justify-center items-center">
+            <View className="flex-row justify-start w-full ml-4">
               <Image
-                source={images.logo}
-                className="w-[300] h-auto mb-[50]"
+                source={images.logoSmall}
                 resizeMode="contain"
+                className="w-[100px] h-auto mt-[-500] mb-[-300]"
               />
             </View>
             <View className="mt-[-150] mb-[150]">
-              <Text className="flex-2 p-2 text-2xl text-center font-pbold text-white">Lease Info</Text>
+              <Text className="flex-2 p-2 text-2xl font-pbold text-white">Lease Info</Text>
               <Text className="flex-1 p-2 text-xl text-white font-pregular">Unit {lease ? lease.unit : null}</Text>
               <Text className="flex-1 p-2 text-xl text-white font-pregular">Start Date: {lease ? lease.startDate : null}</Text>
               <Text className="flex-1 p-2 text-xl text-white font-pregular">End Date: {lease ? lease.endDate : null}</Text>

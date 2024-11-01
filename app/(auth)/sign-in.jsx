@@ -26,7 +26,7 @@ const SignIn = () => {
       await signIn(form.email, form.password);
       setIsLogged(true);
 
-      Alert.alert("Success", "User signed in successfully");
+      console.log("Success", "User signed in successfully");
       router.replace("/home");
     } catch (error) {
       Alert.alert("Error", error.message);
@@ -44,12 +44,14 @@ const SignIn = () => {
         resizeMode="cover"
       >
         <ScrollView className="flex-1 px-4">
-          <View className="items-center justify-center pt-20 pb-10">
-            <Image
-              source={images.logo}
-              resizeMode="contain"
-              className="w-[300px] h-auto mt-10"
-            />
+          <View className="flex items-center justify-center">
+            <View className="flex-row justify-start w-full ml-4">
+              <Image
+                source={images.logoSmall}
+                resizeMode="contain"
+                className="w-[100px] h-auto mt-[-400] mb-[-450]"
+              />
+            </View>
             <View className="flex-row justify-start items-start w-full">
               <Text className="text-2xl font-semibold text-white mb-3">
                 Welcome home! 👋
