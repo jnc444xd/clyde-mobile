@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { Redirect, router } from "expo-router";
-import { View, Text, Image, ScrollView } from "react-native";
+import { View, Image, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../constants";
 import { CustomButton, Loader } from "../components";
@@ -24,7 +24,7 @@ const Welcome = () => {
           <View className="flex-grow justify-center items-center">
             <Image
               source={images.logo}
-              className="w-[520px] h-[336px]"
+              className="w-[300] h-auto"
               resizeMode="contain"
             />
           </View>

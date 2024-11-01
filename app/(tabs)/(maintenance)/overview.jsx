@@ -5,10 +5,12 @@ import { images } from "../../../constants";
 import { CustomButton } from "../../../components";
 import { getMaintenanceRequestsByUnit } from "../../../firebase/database";
 import { useGlobalContext } from "../../../context/GlobalProvider";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 const Overview = () => {
     const [maintenanceData, setMaintenanceData] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [arrivalWindow, setArrivalWindow] = useState(null);
     const [arrivalNotes, setArrivalNotes] = useState(null);
@@ -19,6 +21,8 @@ const Overview = () => {
     if (!loading && !isLogged) return <Redirect href="/sign-in" />;
 
     const fetchData = async () => {
+        if (!unitNumber) return;
+
         try {
             const fetchedData = await getMaintenanceRequestsByUnit(unitNumber);
             const incompleteRequests = fetchedData.filter((request) => !request.isComplete);
@@ -30,10 +34,14 @@ const Overview = () => {
     };
 
     useEffect(() => {
-        if (!unitNumber) return;
-
         fetchData();
-    }, []);
+
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 1800);
+
+        return () => clearTimeout(timer);
+    }, [user]);
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -45,6 +53,12 @@ const Overview = () => {
         setArrivalNotes(notes);
         setModalVisible(true);
     };
+
+    if (isLoading) {
+        return (
+            <LoadingScreen />
+        )
+    }
 
     return (
         <SafeAreaView className="bg-primary h-full">
@@ -80,6 +94,7 @@ const Overview = () => {
             </Modal>
             <ScrollView
                 className="flex-1 p-4 bg-primary h-full"
+                contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
                 refreshControl={
                     <RefreshControl
                         refreshing={refreshing}
@@ -94,9 +109,9 @@ const Overview = () => {
                 <Image
                     source={images.logo}
                     resizeMode="contain"
-                    className="w-[460] h-[136px]"
+                    className="w-[300] h-auto"
                 />
-                <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+                <Text className="text-2xl font-semibold text-white mt-10 font-psemibold m-4">
                     Maintenance Requests
                 </Text>
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
@@ -145,13 +160,6 @@ const Overview = () => {
                     handlePress={() => router.push("/create")}
                     containerStyles="w-full"
                 /> */}
-                {user && user.isAdmin &&
-                    <CustomButton
-                        title="Update Maintenance Requests"
-                        handlePress={() => router.push("/updateMaintenanceRequest")}
-                        containerStyles="w-full"
-                    />
-                }
             </ScrollView>
         </SafeAreaView>
     )

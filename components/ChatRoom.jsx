@@ -95,7 +95,7 @@ const ChatRoom = ({ chatroomID, recipientID }) => {
             showUserAvatar={false}
             onSend={messages => onSend(messages)}
             messagesContainerStyle={{
-                backgroundColor: '#fff'
+                backgroundColor: '#DADADA'
             }}
             textInputStyle={{
                 backgroundColor: '#fff',

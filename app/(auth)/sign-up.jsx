@@ -51,7 +51,7 @@ const SignUp = () => {
     <SafeAreaView className="bg-primary h-full">
       <ScrollView>
         <View
-          className="w-full flex justify-center h-full px-4 my-6"
+          className="w-full flex justify-center items-center h-full px-4 my-6"
           style={{
             minHeight: Dimensions.get("window").height - 100,
           }}
@@ -59,12 +59,14 @@ const SignUp = () => {
           <Image
             source={images.logo}
             resizeMode="contain"
-            className="w-[460] h-[136px]"
+            className="w-[300] h-auto"
           />
 
-          <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Sign Up Here!
-          </Text>
+          <View className="w-full flex justify-start items-start">
+            <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
+              Sign Up Here!
+            </Text>
+          </View>
 
           <FormField
             title="First Name"

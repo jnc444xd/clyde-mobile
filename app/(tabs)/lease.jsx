@@ -7,22 +7,40 @@ import { images } from "../../constants";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getLease } from "../../firebase/database";
 import LogoutButton from "../../components/LogoutButton";
+import LoadingScreen from "../../components/LoadingScreen";
 
 const LeaseInfo = () => {
   const [lease, setLease] = useState(null);
   const [paymentList, setPaymentList] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useGlobalContext();
 
-  useEffect(() => {
-    if (!user) return;
-    fetchData();
-  }, []);
+  const monthOrder = {
+    "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5,
+    "July": 6, "August": 7, "September": 8, "October": 9, "November": 10, "December": 11
+  };
 
-  // useEffect(() => {
-  //   console.log(paymentList);
-  // }, [paymentList]);
+  const fetchData = async () => {
+    if (!user) return;
+
+    try {
+      const fetchedData = await getLease(user.unit);
+      setLease(fetchedData[0]);
+    } catch (error) {
+      console.error('Failed to fetch lease: ', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, [user]);
 
   useEffect(() => {
     if (lease) {
@@ -30,30 +48,13 @@ const LeaseInfo = () => {
     }
   }, [lease]);
 
-  const fetchData = async () => {
-    try {
-      const fetchedData = await getLease(user.unit);
-      setLease(fetchedData[0]);
-      setLoading(false);
-    } catch (error) {
-      console.error('Failed to fetch lease: ', error);
-      setLoading(false);
-    }
-  };
-
   const onRefresh = () => {
     setRefreshing(true);
-    setLoading(true);
     fetchData().then(() => setRefreshing(false));
   };
 
-  if (loading) {
-    return <ActivityIndicator size="large" color="#fff" />;
-  }
-
-  const monthOrder = {
-    "January": 0, "February": 1, "March": 2, "April": 3, "May": 4, "June": 5,
-    "July": 6, "August": 7, "September": 8, "October": 9, "November": 10, "December": 11
+  if (isLoading) {
+    return <LoadingScreen />;
   };
 
   return (
@@ -79,7 +80,7 @@ const LeaseInfo = () => {
           <View className="flex-grow justify-center items-center">
             <Image
               source={images.logo}
-              className="w-[520px] h-[336px]"
+              className="w-[300] h-auto"
               resizeMode="contain"
             />
           </View>

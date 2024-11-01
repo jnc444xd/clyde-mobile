@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import Video from "react-native-video";
 import * as ImagePicker from 'expo-image-picker';
@@ -11,6 +11,7 @@ import { uploadImageFromLibrary, uploadPhoto, getFileUrl, deleteImage } from "..
 import { serverTimestamp } from "firebase/firestore";
 import { CustomButton, FormField } from "../../../components";
 import { useGlobalContext } from "../../../context/GlobalProvider";
+import LoadingScreen from "../../../components/LoadingScreen";
 
 const DayButton = ({ day, onSelect, isSelected }) => (
   <TouchableOpacity onPress={() => onSelect(day)}>
@@ -24,11 +25,6 @@ const DayButton = ({ day, onSelect, isSelected }) => (
 );
 
 const Create = () => {
-  const { user } = useGlobalContext();
-  const unitNumber = user ? user.unit : null;
-  const creatorID = user ? user.uid : null;
-  const adminUID = Constants.expoConfig.extra.adminUID;
-
   const [imagePath, setImagePath] = useState([]);
   // const [videoPath, setVideoPath] = useState([]);
   const [isSubmitting, setSubmitting] = useState(false);
@@ -46,6 +42,22 @@ const Create = () => {
     Sunday: { selected: false, note: "" },
   });
   const [isUrgent, setIsUrgent] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const { user, loading, isLogged } = useGlobalContext();
+  const unitNumber = user ? user.unit : null;
+  const creatorID = user ? user.uid : null;
+  const adminUID = Constants.expoConfig.extra.adminUID;
+
+  if (!loading && !isLogged) return <Redirect href="/sign-in" />;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1800);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const toggleSwitch = () => setIsUrgent(previousState => !previousState);
 
@@ -140,7 +152,7 @@ const Create = () => {
               ref: uploadResult.storageRef
             }
           ]);
-          
+
           Alert.alert("Upload Successful!");
 
         } else {
@@ -188,7 +200,7 @@ const Create = () => {
         createdAt: serverTimestamp(),
         scheduled: false,
         arrivalWindow: "",
-        arrivalNotes:"",
+        arrivalNotes: "",
         invoicePaid: false,
         adminID: adminUID,
         creatorID: creatorID
@@ -206,6 +218,12 @@ const Create = () => {
     } finally {
       setSubmitting(false);
     }
+  };
+
+  if (isLoading) {
+    return (
+      <LoadingScreen />
+    )
   };
 
   return (

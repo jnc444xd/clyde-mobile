@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image, ScrollView, Text, View, RefreshControl } from "react-native";
-import { router, Link } from "expo-router";
+import { router } from "expo-router";
 import { CustomButton } from "../../components";
 import { images } from "../../constants";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { getNotices } from "../../firebase/database";
 import LogoutButton from "../../components/LogoutButton";
+import LoadingScreen from "../../components/LoadingScreen";
 
 const Home = () => {
   const [notices, setNotices] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { user } = useGlobalContext();
 
@@ -26,11 +28,23 @@ const Home = () => {
 
   useEffect(() => {
     fetchData();
+
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1800);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const onRefresh = () => {
     setRefreshing(true);
     fetchData().then(() => setRefreshing(false));
+  };
+
+  if (isLoading) {
+    return (
+      <LoadingScreen />
+    )
   };
 
   return (
@@ -41,7 +55,7 @@ const Home = () => {
       <View className="flex-grow justify-center items-center">
         <Image
           source={images.logo}
-          className="w-[520px] h-[336px]"
+          className="w-[300px] h-auto"
           resizeMode="contain"
         />
       </View>
@@ -53,6 +67,13 @@ const Home = () => {
         <CustomButton
           title="Go to Admin Chat"
           handlePress={() => router.push("/adminChatSelect")}
+          containerStyles="w-full"
+        />
+      }
+      {user && user.isAdmin &&
+        <CustomButton
+          title="Update Maintenance Requests"
+          handlePress={() => router.push("/updateMaintenanceRequest")}
           containerStyles="w-full"
         />
       }
