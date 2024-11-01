@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useRef } from 'react';
+import { router } from 'expo-router';
 import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
 import * as Device from "expo-device";
@@ -43,6 +44,7 @@ const NotificationProvider = ({ children, userId }) => {
 
     responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
       console.log("Notification Clicked:", response);
+      router.push('/chat');
     });
 
     return () => {

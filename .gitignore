@@ -4,3 +4,5 @@ node_modules
 # Firebase credentials
 GoogleService-Info.plist
 google-services.json
+
+/functions

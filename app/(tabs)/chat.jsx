@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { Text } from 'react-native';
 import { useGlobalContext } from "../../context/GlobalProvider";
 import Constants from "expo-constants";
 import ChatRoom from "../../components/ChatRoom";
 
 const Chat = () => {
+  const [chatroomID, setChatroomID] = useState(null);
   const { user } = useGlobalContext();
-  const chatroomID = user ? user.accountID : null;
   const adminUID = Constants.expoConfig.extra.adminUID;
+
+  useEffect(() => {
+    if (user?.accountID) {
+      setChatroomID(user.accountID);
+    }
+  }, [user]);
+
+  if (!chatroomID) {
+    return <Text>Loading chat...</Text>;
+  }
 
   return (
     <ChatRoom
