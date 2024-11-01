@@ -9,6 +9,7 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 const UpdateRequests = () => {
     const [maintenanceData, setMaintenanceData] = useState([]);
     const [isSubmitting, setSubmitting] = useState(false);
+    const [refreshing, setRefreshing] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
     const [form, setForm] = useState({
@@ -47,6 +48,12 @@ const UpdateRequests = () => {
     useEffect(() => {
         fetchData();
     }, []);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        fetchData().then(() => setRefreshing(false));
+    };
+
 
     const openUpdateModal = (selectedID) => {
         setCurrentItem(selectedID);

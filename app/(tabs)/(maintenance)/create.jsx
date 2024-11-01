@@ -3,6 +3,7 @@ import { Link, router } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 // import Video from "react-native-video";
 import * as ImagePicker from 'expo-image-picker';
+import Constants from "expo-constants";
 import { View, Text, ScrollView, Dimensions, Alert, Image, Button, Switch, TouchableOpacity, TextInput } from "react-native";
 import { images } from "../../../constants";
 import { addMaintenanceRequest } from "../../../firebase/database";
@@ -25,6 +26,8 @@ const DayButton = ({ day, onSelect, isSelected }) => (
 const Create = () => {
   const { user } = useGlobalContext();
   const unitNumber = user ? user.unit : null;
+  const creatorID = user ? user.uid : null;
+  const adminUID = Constants.expoConfig.extra.adminUID;
 
   const [imagePath, setImagePath] = useState([]);
   // const [videoPath, setVideoPath] = useState([]);
@@ -186,7 +189,10 @@ const Create = () => {
         scheduled: false,
         arrivalWindow: "",
         arrivalNotes:"",
-        invoicePaid: false
+        invoicePaid: false,
+        adminID: adminUID,
+        creatorID: creatorID
+
       };
       const result = await addMaintenanceRequest(maintenanceRequestData);
 
