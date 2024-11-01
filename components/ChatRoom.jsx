@@ -22,6 +22,7 @@ import { useGlobalContext } from "../context/GlobalProvider";
 const ChatRoom = ({ chatroomID, recipientID }) => {
 
     const [messages, setMessages] = useState([]);
+    const [userData, setUserData] = useState(null);
     // const navigation = useNavigation();
 
     const { user } = useGlobalContext();
@@ -44,6 +45,12 @@ const ChatRoom = ({ chatroomID, recipientID }) => {
     //     )
     //   });
     // }, [navigation]);
+
+    useEffect(() => {
+        if (user) {
+            setUserData(user);
+        }
+    }, [user]);
 
     useLayoutEffect(() => {
         const chatRef = collection(db, 'chats', `${chatroomID}`, 'messages');
@@ -77,6 +84,10 @@ const ChatRoom = ({ chatroomID, recipientID }) => {
         });
     }, []);
 
+    if (!user) {
+        return <Text>Loading chat...</Text>;
+    }
+
     return (
         <GiftedChat
             messages={messages}
@@ -92,6 +103,7 @@ const ChatRoom = ({ chatroomID, recipientID }) => {
             }}
             user={{
                 _id: user ? user.email : null,
+                name: user ? `${user.firstName} ${user.lastName}` : null,
                 // avatar: 
             }}
         />
