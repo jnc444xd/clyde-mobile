@@ -134,6 +134,10 @@ const Create = () => {
     }
   };
 
+  useEffect(() => {
+    fetchAllImageURLs();
+  }, [imageRef]);
+
   const submit = async () => {
     if (form.description === "" || form.location === "") {
       Alert.alert("Error", "Please fill in all fields");
@@ -151,19 +155,14 @@ const Create = () => {
 
     const availableDays = processDays(days);
 
-    // Get image urls
-    fetchAllImageURLs();
-
     if (!availableDays.length > 0) {
       Alert.alert("Error", "Please select at least one available day and time");
       return;
     }
 
-    const currentDate = new Date().toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' });
-
-    setSubmitting(true);
-
     try {
+      const currentDate = new Date().toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' });
+
       const maintenanceRequestData = {
         unit: unitNumber,
         description: form.description,
@@ -179,7 +178,6 @@ const Create = () => {
         invoicePaid: false,
         adminID: adminUID,
         creatorID: creatorID
-
       };
       const result = await addMaintenanceRequest(maintenanceRequestData);
 

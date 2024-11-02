@@ -10,6 +10,7 @@ import LoadingScreen from "../../../components/LoadingScreen";
 
 const Overview = () => {
     const [maintenanceData, setMaintenanceData] = useState([]);
+    const [selectedRequestID, setSelectedRequestID] = useState(null);
     const [refreshing, setRefreshing] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
@@ -49,10 +50,29 @@ const Overview = () => {
         fetchData().then(() => setRefreshing(false));
     };
 
-    const openUpdateModal = (window, notes) => {
+    const openUpdateModal = (window, notes, id) => {
+        setSelectedRequestID(id);
         setArrivalWindow(window);
         setArrivalNotes(notes);
         setModalVisible(true);
+    };
+
+    const renderSelectedRequestDetails = () => {
+        const item = maintenanceData.find(({ id }) => id === selectedRequestID);
+        if (!item) return null;
+
+        return (
+            <>
+                <Text className="text-xl text-black font-pbold my-2">{item.scheduled ? "Scheduled!" : "Scheduling In Progress"}</Text>
+                {arrivalWindow && <Text className="text-base text-black font-medium my-2">Arrival Window: {arrivalWindow}</Text>}
+                {arrivalNotes && <Text className="text-base text-black font-medium my-2">Notes: {arrivalNotes}</Text>}
+                <Text className="text-base text-black font-medium my-2">Urgent: {item.urgent ? 'Yes' : 'No'}</Text>
+                <Text className="text-base text-black font-medium my-2">Description: {item.description}</Text>
+                <Text className="text-base text-black font-medium my-2">Location: {item.location}</Text>
+                <Text className="text-base text-black font-medium my-2">Availability: {item.availability.join('\n')}</Text>
+                <Text className="text-base text-black font-medium my-2">Attachments: {item.media.length > 0 ? 'Yes' : 'No'}</Text>
+            </>
+        );
     };
 
     if (isLoading) {
@@ -94,54 +114,7 @@ const Overview = () => {
                         }
                     >
                         <View className="flex-col justify-center mt-12 mx-5 bg-white rounded-lg p-9 items-center shadow-lg" style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
-                            {maintenanceData && maintenanceData.map((item, index) => (
-                                <View key={index}>
-                                    {item.scheduled ?
-                                        <View className="flex-row justify-start items-start w-full mb-4">
-                                            <Text className="text-xl text-black font-pbold">Scheduled!</Text>
-                                        </View>
-                                        :
-                                        <View className="flex-row justify-start items-start w-full mb-4">
-                                            <Text className="text-xl text-black font-pbold">Scheduling In Progress</Text>
-                                        </View>
-                                    }
-                                    {arrivalWindow &&
-                                        <View className="flex-row justify-start items-start w-full my-4">
-                                            <Text className="text-base text-black font-medium">Arrival Window: </Text>
-                                            <Text className="text-base text-black font-medium">{arrivalWindow}</Text>
-                                        </View>
-                                    }
-                                    {arrivalNotes &&
-                                        <View className="flex-row justify-start items-start w-full my-4">
-                                            <Text className="text-base text-black font-medium">Notes: </Text>
-                                            <Text className="text-base text-black font-medium">{arrivalNotes}</Text>
-                                        </View>
-                                    }
-                                    <View className="flex-row justify-start items-start w-full my-4">
-                                        <Text className="text-xl text-black font-pbold">Details</Text>
-                                    </View>
-                                    <View className="flex-row justify-start items-start w-full my-4">
-                                        <Text className="text-base text-black font-medium">Urgent: </Text>
-                                        <Text className="text-base text-black font-medium">{item.urgent ? 'Yes' : 'No'}</Text>
-                                    </View>
-                                    <View className="flex-row justify-start items-start w-full my-4">
-                                        <Text className="text-base text-black font-medium">Description: </Text>
-                                        <Text className="text-base text-black font-medium">{item.description}</Text>
-                                    </View>
-                                    <View className="flex-row justify-start items-start w-full my-4">
-                                        <Text className="text-base text-black font-medium">Location: </Text>
-                                        <Text className="text-base text-black font-medium">{item.location}</Text>
-                                    </View>
-                                    <View className="flex-row justify-start items-start w-full my-4">
-                                        <Text className="text-base text-black font-medium">Availability: </Text>
-                                        <Text className="text-base text-black font-medium">{item.availability.join('\n')}</Text>
-                                    </View>
-                                    <View className="flex-row justify-start items-start w-full my-4">
-                                        <Text className="text-base text-black font-medium">Attachments: </Text>
-                                        <Text className="text-base text-black font-medium">{item.media.length > 0 ? 'Yes' : 'No'}</Text>
-                                    </View>
-                                </View>
-                            ))}
+                            {renderSelectedRequestDetails()}
                             <TouchableOpacity
                                 onPress={() => setModalVisible(!modalVisible)}
                                 className="bg-white"
@@ -191,7 +164,7 @@ const Overview = () => {
                                             <View className="flex-1 p-4 text-center text-white bg-gray-800">
                                                 {item.scheduled ?
                                                     <TouchableOpacity
-                                                        onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes)}
+                                                        onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes, item.id)}
                                                         className="bg-gray-800"
                                                     >
                                                         <Text className="text-white text-center">Press here for details</Text>
