@@ -7,8 +7,8 @@ export const uploadImageFromLibrary = async (user) => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.1,
+      aspect: [3, 3],
+      quality: 0,
     });
 
     if (!result.canceled) {

@@ -182,26 +182,29 @@ const Overview = () => {
                         <View className="flex-row justify-start mb-[50] w-[90%]">
                             <ScrollView>
                                 <View className="flex-col items-start w-full">
-                                    <View className="flex-row border-b border-gray-300 justify-center items-center">
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Status</Text>
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Description</Text>
+                                    <View className="flex-row w-full border-b border-gray-300 justify-center items-center">
+                                        <Text className="flex-1 p-4 pr-8 text-center font-bold text-white bg-gray-800">Status</Text>
+                                        <Text className="flex-1 p-4 text-center font-bold text-white bg-gray-800">             </Text>
                                     </View>
                                     {maintenanceData && maintenanceData.map((item, index) => (
-                                        <View key={index} className="flex-row border-gray-300 justify-center">
-                                            <View className="flex-1 p-2 text-center text-white bg-gray-800">
+                                        <View key={index} className="flex-row w-full border-gray-300 justify-center">
+                                            <View className="flex-1 p-4 text-center text-white bg-gray-800">
                                                 {item.scheduled ?
                                                     <TouchableOpacity
                                                         onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes)}
                                                         className="bg-gray-800"
                                                     >
-                                                        <Text className="text-white text-center">Scheduled</Text>
                                                         <Text className="text-white text-center">Press here for details</Text>
                                                     </TouchableOpacity>
                                                     :
-                                                    'Scheduling'
+                                                    <Text className="text-white text-center bg-gray-800">
+                                                        Scheduling In Progress
+                                                    </Text>
                                                 }
                                             </View>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.description}</Text>
+                                            <Text className="flex-1 p-4 text-center text-white bg-gray-800">
+                                                {item.createdAt}
+                                            </Text>
                                         </View>
                                     ))}
                                 </View>

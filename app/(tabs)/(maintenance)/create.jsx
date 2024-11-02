@@ -4,14 +4,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // import Video from "react-native-video";
 import * as ImagePicker from 'expo-image-picker';
 import Constants from "expo-constants";
-import { View, Text, ScrollView, Dimensions, Alert, Image, Button, Switch, TouchableOpacity, TextInput } from "react-native";
-import { images } from "../../../constants";
+import { View, Text, ScrollView, Dimensions, Alert, Image, Switch, TouchableOpacity, TextInput } from "react-native";
+import { images, icons } from "../../../constants";
 import { addMaintenanceRequest } from "../../../firebase/database";
-import { uploadImageFromLibrary, uploadPhoto, getFileUrl, deleteImage } from "../../../firebase/storage";
-import { serverTimestamp } from "firebase/firestore";
+import { uploadPhoto, getFileUrl, deleteImage } from "../../../firebase/storage";
 import { CustomButton, FormField } from "../../../components";
 import { useGlobalContext } from "../../../context/GlobalProvider";
-import LoadingScreen from "../../../components/LoadingScreen";
 
 const DayButton = ({ day, onSelect, isSelected }) => (
   <TouchableOpacity onPress={() => onSelect(day)}>
@@ -25,8 +23,8 @@ const DayButton = ({ day, onSelect, isSelected }) => (
 );
 
 const Create = () => {
-  const [imagePath, setImagePath] = useState([]);
-  // const [videoPath, setVideoPath] = useState([]);
+  const [imagePaths, setImagePaths] = useState([]);
+  const [imageRef, setImageRef] = useState([]);
   const [isSubmitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     description: "",
@@ -42,7 +40,8 @@ const Create = () => {
     Sunday: { selected: false, note: "" },
   });
   const [isUrgent, setIsUrgent] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
 
   const { user, loading, isLogged } = useGlobalContext();
   const unitNumber = user ? user.unit : null;
@@ -50,14 +49,6 @@ const Create = () => {
   const adminUID = Constants.expoConfig.extra.adminUID;
 
   if (!loading && !isLogged) return <Redirect href="/sign-in" />;
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const toggleSwitch = () => setIsUrgent(previousState => !previousState);
 
@@ -82,49 +73,13 @@ const Create = () => {
   };
 
   const handleDeleteImage = (index, ref) => {
-    setImagePath(currentImages => currentImages.filter((_, i) => i !== index));
+    setImagePaths(currentImages => currentImages.filter((_, i) => i !== index));
 
     try {
       deleteImage(ref);
       console.log("Image deleted successfully");
     } catch (error) {
       console.error("Failed to delete image:", error);
-    }
-  };
-
-  // User select photo to upload from library
-  const selectPhoto = async () => {
-    const libraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-    if (libraryPermission.granted) {
-      const uploadResult = await uploadImageFromLibrary(user.accountID);
-      // const downloadUrl = await getFileUrl(uploadResult.storageRef);
-
-      if (uploadResult && uploadResult.type.startsWith("image")) {
-        const downloadUrl = await getFileUrl(uploadResult.storageRef);
-
-        setImagePath(prevImagePaths => [
-          ...prevImagePaths,
-          {
-            uri: downloadUrl,
-            ref: uploadResult.storageRef
-          }
-        ]);
-
-        Alert.alert("Upload Successful!");
-
-      } else if (uploadResult && downloadUrl && uploadResult.type.startsWith("video")) {
-        Alert.alert("Unable to upload videos at the moment, sorry!");
-        // setVideoPath(prevVideoPaths => [...prevVideoPaths, downloadUrl]);
-
-      } else {
-        console.log("Upload Unsuccessful");
-      }
-    } else {
-
-      console.log("Library permissions not granted");
-      return;
-
     }
   };
 
@@ -135,32 +90,47 @@ const Create = () => {
     if (cameraPermission.granted) {
       const photoResult = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0.1,
+        aspect: [3, 3],
+        quality: 0,
       });
 
       if (!photoResult.canceled) {
+        setIsLoading(true);
         const uploadResult = await uploadPhoto(photoResult, user.accountID);
-
         if (uploadResult) {
-          const downloadUrl = await getFileUrl(uploadResult.storageRef);
-
-          setImagePath(prevImagePaths => [
-            ...prevImagePaths,
-            {
-              uri: downloadUrl,
-              ref: uploadResult.storageRef
-            }
-          ]);
-
-          Alert.alert("Upload Successful!");
-
-        } else {
-          console.log("Upload Unsuccessful");
+          setImageRef(prevRefs => [...prevRefs, uploadResult.storageRef]);
         }
+        setTimeout(() => {
+          setIsLoading(false);
+          setUploadSuccess(true);
+        }, 3000);
       }
     } else {
       Alert.alert("Camera Permission", "Camera permission is required to take photos!");
+    }
+  };
+
+  const fetchImageURL = async (storageRef) => {
+    try {
+      const url = await getFileUrl(storageRef);
+      return url;
+    } catch (error) {
+      console.error("Failed to download URL:", error);
+      throw new Error("Failed to fetch image URL");
+    }
+  };
+
+  const fetchAllImageURLs = async () => {
+    if (imageRef.length === 0) return;
+
+    try {
+      const promises = imageRef.map(ref => fetchImageURL(ref));
+      const results = await Promise.all(promises);
+      setImagePaths(results);
+      console.log("All images have been successfully loaded!");
+    } catch (error) {
+      console.error("Error fetching image URLs:", error);
+      Alert.alert("Error", "Failed to fetch all image URLs.");
     }
   };
 
@@ -181,10 +151,15 @@ const Create = () => {
 
     const availableDays = processDays(days);
 
+    // Get image urls
+    fetchAllImageURLs();
+
     if (!availableDays.length > 0) {
       Alert.alert("Error", "Please select at least one available day and time");
       return;
     }
+
+    const currentDate = new Date().toLocaleDateString("en-US", { year: 'numeric', month: '2-digit', day: '2-digit' });
 
     setSubmitting(true);
 
@@ -195,9 +170,9 @@ const Create = () => {
         location: form.location,
         availability: availableDays,
         urgent: isUrgent,
-        media: imagePath,
+        media: imagePaths,
         isComplete: false,
-        createdAt: serverTimestamp(),
+        createdAt: currentDate,
         scheduled: false,
         arrivalWindow: "",
         arrivalNotes: "",
@@ -218,12 +193,6 @@ const Create = () => {
     } finally {
       setSubmitting(false);
     }
-  };
-
-  if (isLoading) {
-    return (
-      <LoadingScreen />
-    )
   };
 
   return (
@@ -287,11 +256,34 @@ const Create = () => {
           <Text className="text-[16px] text-white mt-10 font-psemibold">
             ----
           </Text>
-          <Text className="text-[16px] text-white mt-10 font-psemibold">
-            For reference please upload photos:{"\n"}
-          </Text>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="flex-row">
-            {imagePath.length > 0 && imagePath.map((item, index) => (
+          {
+            uploadSuccess &&
+            <View className="w-full flex-row justify-center mb-4">
+              <Text className="text-xl text-white font-psemibold">Upload Successful!</Text>
+            </View>
+          }
+          {
+            isLoading &&
+            <View className="w-full flex-row justify-center">
+              <Image
+                source={icons.loading}
+                className="w-[50] h-[50]"
+                resizeMode="contain"
+              />
+            </View>
+          }
+          {
+            !isLoading &&
+            <View className="w-full flex-row justify-center">
+              <CustomButton
+                title="Upload Photo"
+                handlePress={takePhoto}
+                containerStyles="mt-7 w-[200]"
+              />
+            </View>
+          }
+          {/* <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} className="flex-row">
+            {imagePaths && imagePaths.length > 0 && imagePaths.map((item, index) => (
               <View key={index}>
                 <Image
                   source={{ uri: item.uri }}
@@ -300,26 +292,12 @@ const Create = () => {
                 <Button title="x" onPress={() => handleDeleteImage(index, item.ref)} />
               </View>
             ))}
-          </ScrollView>
-          <Button title="Choose Image From Library" onPress={selectPhoto} />
-          <Button title="Take Photo" onPress={takePhoto} />
-          {/* {
-            videoPath &&
-            <Video
-              source={{ uri: videoPath }}
-              style={{ width: 200, height: 200 }}
-              controls={true}
-              resizeMode="contain"
-              repeat={false}
-              onError={(e) => console.log(e)}
-            />
-          } */}
+          </ScrollView> */}
           <View className="w-full flex-row justify-center">
             <CustomButton
               title="Submit"
               handlePress={submit}
               containerStyles="mt-7 w-[100]"
-              isLoading={isSubmitting}
             />
           </View>
         </View>
