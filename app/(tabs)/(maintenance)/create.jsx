@@ -235,9 +235,9 @@ const Create = () => {
           <Image
             source={images.logo}
             resizeMode="contain"
-            className="w-[200] h-auto mt-[-80]"
+            className="w-[200] h-[200]"
           />
-          <Text className="text-2xl text-white font-psemibold mt-[-80]">
+          <Text className="text-2xl text-white font-psemibold">
             Maintenance Request Form:
           </Text>
           <View>

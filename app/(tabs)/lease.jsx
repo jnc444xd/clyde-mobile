@@ -82,20 +82,18 @@ const LeaseInfo = () => {
             />
           }
         >
-          <View className="flex-grow justify-center w-full h-full px-4">
-            <View className="flex-row justify-start w-full ml-4">
-              <Image
-                source={images.logoSmall}
-                resizeMode="contain"
-                className="w-[100px] h-auto mt-[-500] mb-[-300]"
-              />
-            </View>
-            <View className="mt-[-150] mb-[150]">
-              <Text className="flex-2 p-2 text-2xl font-pbold text-white">Lease Info</Text>
-              <Text className="flex-1 p-2 text-xl text-white font-pregular">Unit {lease ? lease.unit : null}</Text>
-              <Text className="flex-1 p-2 text-xl text-white font-pregular">Start Date: {lease ? lease.startDate : null}</Text>
-              <Text className="flex-1 p-2 text-xl text-white font-pregular">End Date: {lease ? lease.endDate : null}</Text>
-              <Text className="flex-1 p-2 text-xl text-white font-pregular">Payment List:</Text>
+          <View className="flex-grow justify-between w-full px-4">
+            <Image
+              source={images.logoSmall}
+              resizeMode="contain"
+              className="w-[100px] h-[100px] mt-10 ml-2"
+            />
+            <View className="mb-[150]">
+              <Text className="flex-2 p-2 text-2xl font-pbold text-white mb-2">Lease Info</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular mb-1">Unit {lease ? lease.unit : null}</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular mb-1">Start Date: {lease ? lease.startDate : null}</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular mb-1">End Date: {lease ? lease.endDate : null}</Text>
+              <Text className="flex-1 p-2 text-xl text-white font-pregular mb-1">Payment List:</Text>
             </View>
             {
               paymentList && Object.entries(paymentList)

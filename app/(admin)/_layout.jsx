@@ -7,7 +7,10 @@ const AdminLayout = () => {
   const { loading, isLogged, user } = useGlobalContext();
 
   if (!loading && !isLogged) return <Redirect href="/sign-in" />;
-  if (!loading && !user.isAdmin) return <Redirect href="/home" />;
+
+  if (user) {
+    if (!loading && !user.isAdmin) return <Redirect href="/home" />;
+  }
 
   return (
     <>
@@ -44,6 +47,12 @@ const AdminLayout = () => {
         />
         <Stack.Screen
           name="adminChatRoom"
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="adminControls"
           options={{
             headerShown: false,
           }}

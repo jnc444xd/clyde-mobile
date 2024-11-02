@@ -97,11 +97,11 @@ const Overview = () => {
                             {maintenanceData && maintenanceData.map((item, index) => (
                                 <View key={index}>
                                     {item.scheduled ?
-                                        <View className="flex-row justify-start items-start w-full my-4">
+                                        <View className="flex-row justify-start items-start w-full mb-4">
                                             <Text className="text-xl text-black font-pbold">Scheduled!</Text>
                                         </View>
                                         :
-                                        <View className="flex-row justify-start items-start w-full my-4">
+                                        <View className="flex-row justify-start items-start w-full mb-4">
                                             <Text className="text-xl text-black font-pbold">Scheduling In Progress</Text>
                                         </View>
                                     }
@@ -168,45 +168,45 @@ const Overview = () => {
                         />
                     }
                 >
-                    <View className="flex-row justify-start w-full ml-[50]">
+                    <View className="mb-[150]">
                         <Image
                             source={images.logoSmall}
                             resizeMode="contain"
-                            className="w-[100px] h-auto mt-[-450] mb-[-400]"
+                            className="w-[100px] h-[100px] mb-[50] ml-1"
                         />
-                    </View>
-                    <View className="flex-row justify-start w-[90%]">
-                        <Text className="text-2xl font-semibold text-white font-psemibold mb-4 mt-[-50]">
-                            Maintenance Requests
-                        </Text>
-                    </View>
-                    <View className="flex-row justify-start mb-[50] w-[90%]">
-                        <ScrollView>
-                            <View className="flex-col items-start w-full">
-                                <View className="flex-row border-b border-gray-300 justify-center items-center">
-                                    <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Status</Text>
-                                    <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Description</Text>
-                                </View>
-                                {maintenanceData && maintenanceData.map((item, index) => (
-                                    <View key={index} className="flex-row border-gray-300 justify-center">
-                                        <View className="flex-1 p-2 text-center text-white bg-gray-800">
-                                            {item.scheduled ?
-                                                <TouchableOpacity
-                                                    onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes)}
-                                                    className="bg-gray-800"
-                                                >
-                                                    <Text className="text-white text-center">Scheduled</Text>
-                                                    <Text className="text-white text-center">Press here for details</Text>
-                                                </TouchableOpacity>
-                                                :
-                                                'Scheduling'
-                                            }
-                                        </View>
-                                        <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.description}</Text>
+                        <View className="flex-row justify-start w-[90%]">
+                            <Text className="text-2xl font-semibold text-white font-psemibold mb-4">
+                                Maintenance Requests
+                            </Text>
+                        </View>
+                        <View className="flex-row justify-start mb-[50] w-[90%]">
+                            <ScrollView>
+                                <View className="flex-col items-start w-full">
+                                    <View className="flex-row border-b border-gray-300 justify-center items-center">
+                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Status</Text>
+                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Description</Text>
                                     </View>
-                                ))}
-                            </View>
-                        </ScrollView>
+                                    {maintenanceData && maintenanceData.map((item, index) => (
+                                        <View key={index} className="flex-row border-gray-300 justify-center">
+                                            <View className="flex-1 p-2 text-center text-white bg-gray-800">
+                                                {item.scheduled ?
+                                                    <TouchableOpacity
+                                                        onPress={() => openUpdateModal(item.arrivalWindow, item.arrivalNotes)}
+                                                        className="bg-gray-800"
+                                                    >
+                                                        <Text className="text-white text-center">Scheduled</Text>
+                                                        <Text className="text-white text-center">Press here for details</Text>
+                                                    </TouchableOpacity>
+                                                    :
+                                                    'Scheduling'
+                                                }
+                                            </View>
+                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.description}</Text>
+                                        </View>
+                                    ))}
+                                </View>
+                            </ScrollView>
+                        </View>
                     </View>
                     {
                         user && !user.isAdmin &&

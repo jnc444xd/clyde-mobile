@@ -44,12 +44,12 @@ const SignIn = () => {
         resizeMode="cover"
       >
         <ScrollView className="flex-1 px-4">
-          <View className="flex items-center justify-center">
+          <View className="flex items-center justify-center mt-[100]">
             <View className="flex-row justify-start w-full ml-4">
               <Image
                 source={images.logoSmall}
                 resizeMode="contain"
-                className="w-[100px] h-auto mt-[-400] mb-[-450]"
+                className="w-[100px] h-[100px] mb-[50]"
               />
             </View>
             <View className="flex-row justify-start items-start w-full">

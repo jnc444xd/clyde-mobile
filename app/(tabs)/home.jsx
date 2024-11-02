@@ -62,51 +62,22 @@ const Home = () => {
           <Image
             source={images.logoSmall}
             resizeMode="contain"
-            className="w-[100px] h-auto mt-[-450] mb-[-450]"
+            className="w-[100px] h-[100px] mt-10"
           />
         </View>
-        <Text className="font-pmedium text-2xl text-gray-100 mx-5">
+        <View className="flex items-center">
+          {
+            user && user.isAdmin &&
+            <CustomButton
+              title="Admin Control Panel"
+              handlePress={() => router.push("/adminControls")}
+              containerStyles="w-[250px] mt-10 p-2"
+            />
+          }
+        </View>
+        <Text className="font-pmedium text-2xl text-gray-100 mx-5 my-10">
           Hi {user ? user.fullName : `There`} 👋
         </Text>
-        {
-          user && user.isAdmin &&
-          <CustomButton
-            title="Go to Admin Chat"
-            handlePress={() => router.push("/adminChatSelect")}
-            containerStyles="w-full"
-          />
-        }
-        {user && user.isAdmin &&
-          <CustomButton
-            title="Update Maintenance Requests"
-            handlePress={() => router.push("/updateMaintenanceRequest")}
-            containerStyles="w-full"
-          />
-        }
-        {
-          user && user.isAdmin &&
-          <CustomButton
-            title="View Payment Lists"
-            handlePress={() => router.push("/updatePaymentList")}
-            containerStyles="w-full"
-          />
-        }
-        {
-          user && user.isAdmin &&
-          <CustomButton
-            title="Create Notice"
-            handlePress={() => router.push("/createNotice")}
-            containerStyles="w-full"
-          />
-        }
-        {
-          user && user.isAdmin &&
-          <CustomButton
-            title="Create Lease"
-            handlePress={() => router.push("/createLease")}
-            containerStyles="w-full"
-          />
-        }
         <ScrollView
           contentContainerStyle={{
             height: "100%",
@@ -118,7 +89,7 @@ const Home = () => {
             />
           }
         >
-          <View className="flex-grow justify-between w-full h-full px-4 my-6">
+          <View className="flex-grow justify-between w-full h-full px-4">
             <ScrollView
               contentContainerStyle={{
                 height: "100%",
