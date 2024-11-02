@@ -17,7 +17,7 @@ const Chat = () => {
 
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1600);
+    }, 1200);
 
     return () => clearTimeout(timer);
   }, [user]);
