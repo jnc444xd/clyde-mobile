@@ -37,7 +37,7 @@ const LeaseInfo = () => {
 
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1800);
+    }, 1600);
 
     return () => clearTimeout(timer);
   }, [user]);

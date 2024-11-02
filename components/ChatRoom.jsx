@@ -4,8 +4,7 @@ import React, {
     useLayoutEffect,
     useCallback
 } from 'react';
-import { TouchableOpacity, Text } from 'react-native';
-// import { AntDesign } from '@expo/vector-icons';
+import { SafeAreaView } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import {
     collection,
@@ -14,22 +13,16 @@ import {
     query,
     onSnapshot
 } from 'firebase/firestore';
-// import { signOut } from '../firebase/auth';
 import { db } from "../firebase/config";
 import { useGlobalContext } from "../context/GlobalProvider";
-
+import LoadingScreen from "../components/LoadingScreen";
 
 const ChatRoom = ({ chatroomID, recipientID }) => {
 
     const [messages, setMessages] = useState([]);
     const [userData, setUserData] = useState(null);
-    // const navigation = useNavigation();
 
     const { user } = useGlobalContext();
-
-    // const onSignOut = () => {
-    //     signOut(auth).catch(error => console.log('Error logging out: ', error));
-    // };
 
     // useLayoutEffect(() => {
     //   navigation.setOptions({
@@ -85,28 +78,32 @@ const ChatRoom = ({ chatroomID, recipientID }) => {
     }, []);
 
     if (!user) {
-        return <Text>Loading chat...</Text>;
+        return (
+            <LoadingScreen />
+        );
     }
 
     return (
-        <GiftedChat
-            messages={messages}
-            showAvatarForEveryMessage={false}
-            showUserAvatar={false}
-            onSend={messages => onSend(messages)}
-            messagesContainerStyle={{
-                backgroundColor: '#DADADA'
-            }}
-            textInputStyle={{
-                backgroundColor: '#fff',
-                borderRadius: 20,
-            }}
-            user={{
-                _id: user ? user.email : null,
-                name: user ? `${user.firstName} ${user.lastName}` : null,
-                // avatar: 
-            }}
-        />
+        <SafeAreaView className="bg-primary h-full flex-1">
+            <GiftedChat
+                messages={messages}
+                showAvatarForEveryMessage={false}
+                showUserAvatar={false}
+                onSend={messages => onSend(messages)}
+                messagesContainerStyle={{
+                    backgroundColor: '#161622'
+                }}
+                textInputStyle={{
+                    backgroundColor: '#fff',
+                    borderRadius: 20,
+                }}
+                user={{
+                    _id: user ? user.email : null,
+                    name: user ? `${user.firstName} ${user.lastName}` : null,
+                    // avatar: 
+                }}
+            />
+        </SafeAreaView>
     );
 };
 

@@ -31,7 +31,7 @@ const Home = () => {
 
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1800);
+    }, 1600);
 
     return () => clearTimeout(timer);
   }, []);
@@ -55,9 +55,9 @@ const Home = () => {
         style={{ flex: 1 }}
         resizeMode="cover"
       >
-        <View className="flex flex-row justify-start p-8">
-          <LogoutButton />
-        </View>
+        <LogoutButton
+          additionalStyles={{ marginLeft: 32, marginTop: 32, marginBottom: 32 }}
+        />
         <View className="flex-row justify-start w-full ml-6">
           <Image
             source={images.logoSmall}
@@ -143,7 +143,7 @@ const Home = () => {
           </View>
         </ScrollView>
       </ImageBackground>
-    </SafeAreaView >
+    </SafeAreaView>
   );
 };
 

@@ -36,7 +36,7 @@ const LoadingScreen = () => {
     }, []);
 
     return (
-        <View className="flex-1 items-center justify-center bg-[#151521]">
+        <View className="flex-1 items-center justify-center bg-[#161622]">
             <Animated.Image
                 source={images.logoNoText}
                 style={{

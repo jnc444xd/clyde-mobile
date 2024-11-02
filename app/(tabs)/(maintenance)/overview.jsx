@@ -5,6 +5,7 @@ import { images } from "../../../constants";
 import { CustomButton } from "../../../components";
 import { getMaintenanceRequestsByUnit } from "../../../firebase/database";
 import { useGlobalContext } from "../../../context/GlobalProvider";
+import LogoutButton from "../../../components/LogoutButton";
 import LoadingScreen from "../../../components/LoadingScreen";
 
 const Overview = () => {
@@ -38,7 +39,7 @@ const Overview = () => {
 
         const timer = setTimeout(() => {
             setIsLoading(false);
-        }, 1800);
+        }, 1600);
 
         return () => clearTimeout(timer);
     }, [user]);
@@ -67,6 +68,9 @@ const Overview = () => {
                 className="flex-1"
                 resizeMode="cover"
             >
+                <View className="flex flex-row justify-start p-8">
+                    <LogoutButton />
+                </View>
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -115,14 +119,16 @@ const Overview = () => {
                         <Image
                             source={images.logoSmall}
                             resizeMode="contain"
-                            className="w-[100px] h-auto mt-[-400] mb-[-400]"
+                            className="w-[100px] h-auto mt-[-450] mb-[-400]"
                         />
                     </View>
-                    <Text className="text-2xl font-semibold text-white font-psemibold mb-4 mt-[-50]">
-                        Maintenance Requests
-                    </Text>
+                    <View className="flex-row justify-start w-full ml-10">
+                        <Text className="text-2xl font-semibold text-white font-psemibold mb-4 mt-[-50]">
+                            Maintenance Requests
+                        </Text>
+                    </View>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
-                        <View className="mx-2">
+                        <View className="ml-5">
                             <View className="flex-row border-b border-gray-300">
                                 <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Scheduling</Text>
                                 <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Urgent?</Text>

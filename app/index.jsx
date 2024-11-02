@@ -11,7 +11,7 @@ const Welcome = () => {
   if (!loading && isLogged) return <Redirect href="/home" />;
 
   return (
-    <SafeAreaView className="bg-primary h-full">
+    <SafeAreaView edges={['top']} className="bg-primary h-full">
       <ImageBackground
         source={images.background}
         className="flex-1"

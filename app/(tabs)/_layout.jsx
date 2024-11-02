@@ -39,9 +39,11 @@ const TabLayout = () => {
           tabBarShowLabel: false,
           tabBarStyle: {
             backgroundColor: "#161622",
-            borderTopWidth: 1,
-            borderTopColor: "#161622",
-            height: 84,
+            borderTopWidth: 0,
+            borderTopColor: "#FFF",
+            height: 85,
+            paddingTop: 35,
+            // paddingBottom: 10,
           },
         }}
       >
@@ -52,9 +54,8 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <TabIcon
-                // icon={icons.home}
+                icon={icons.home}
                 // color={color}
-                name="Home"
                 focused={focused}
               />
             ),
@@ -67,9 +68,8 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <TabIcon
-                // icon={icons.bookmark}
+                icon={icons.chat}
                 // color={color}
-                name="Chat"
                 focused={focused}
               />
             ),
@@ -83,7 +83,8 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <TabIcon
-                name="Maintenance"
+                icon={icons.maintenance}
+                // color={color}
                 focused={focused}
               />
             ),
@@ -96,18 +97,14 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ focused }) => (
               <TabIcon
-                // icon={icons.profile}
+                icon={icons.lease}
                 // color={color}
-                name="Lease"
                 focused={focused}
               />
             ),
           }}
         />
       </Tabs>
-
-      <Loader isLoading={loading} />
-      <StatusBar backgroundColor="#161622" style="light" />
     </>
   );
 };
