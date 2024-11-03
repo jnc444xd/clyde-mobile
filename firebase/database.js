@@ -139,6 +139,16 @@ export const updateMaintenanceRequest = async (updateID, updateData) => {
   }
 };
 
+export const deleteMaintenanceRequest = async (requestID) => {
+  try {
+    const requestRef = doc(db, "maintenance-requests", requestID);
+    await deleteDoc(requestRef);
+    return requestID;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
 export const addNotice = async (noticeData) => {
   try {
     const noticeRef = doc(collection(db, "notices"));
@@ -160,6 +170,16 @@ export const getNotices = async () => {
     return docs;
   } catch (error) {
     throw new Error("Failed to fetch notices");
+  }
+};
+
+export const deleteNotice = async (noticeID) => {
+  try {
+    const noticeRef = doc(db, "notices", noticeID);
+    await deleteDoc(noticeRef);
+    return noticeID;
+  } catch (error) {
+    throw new Error(error.message);
   }
 };
 
@@ -206,16 +226,6 @@ export const getAllLeases = async () => {
 
   return docs;
 };
-
-// export const updateLease = async (updateID, updateData) => {
-//   try {
-//     const updateRef = doc(db, "leases", updateID);
-//     await updateDoc(updateRef, updateData);
-//     return { id: updateID, ...updateData };
-//   } catch (error) {
-//     throw new Error(error.message);
-//   }
-// };
 
 export const updateLease = async (leaseID, month, isPaid) => {
   try {

@@ -57,6 +57,12 @@ const AdminLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="allMaintenanceRequests"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
 
       <Loader isLoading={loading} />

@@ -7,6 +7,7 @@ import eyeHide from "../assets/icons/eye-hide.png";
 import eye from "../assets/icons/eye.png";
 import close from "../assets/icons/close.png";
 import loading from "../assets/icons/loading.gif";
+import trash from "../assets/icons/trash.png";
 
 export default {
   chat,
@@ -17,5 +18,6 @@ export default {
   eyeHide,
   eye,
   close,
-  loading
+  loading,
+  trash
 };

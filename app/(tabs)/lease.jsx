@@ -13,7 +13,7 @@ const LeaseInfo = () => {
   const [lease, setLease] = useState(null);
   const [paymentList, setPaymentList] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const { user } = useGlobalContext();
 
   const monthOrder = {
@@ -35,11 +35,11 @@ const LeaseInfo = () => {
   useEffect(() => {
     fetchData();
 
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
+    // const timer = setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 1200);
 
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, [user]);
 
   useEffect(() => {
@@ -53,9 +53,9 @@ const LeaseInfo = () => {
     fetchData().then(() => setRefreshing(false));
   };
 
-  if (isLoading) {
-    return <LoadingScreen />;
-  };
+  // if (isLoading) {
+  //   return <LoadingScreen />;
+  // };
 
   return (
     <SafeAreaView className="bg-primary h-full flex-1">
@@ -112,10 +112,10 @@ const LeaseInfo = () => {
                 })
                 .map(([month, details], index) => (
                   <View key={index}>
-                    <Text className="flex-1 p-2 text-l text-white">----</Text>
-                    <Text className="flex-1 p-2 text-l text-white">{month}</Text>
-                    <Text className="flex-1 p-2 text-l text-white">Rent Due: ${details.rentAmount}</Text>
-                    <Text className="flex-1 p-2 text-l text-white">{details.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
+                    <Text className="flex-1 p-2 text-l text-white font-pregular">----</Text>
+                    <Text className="flex-1 p-2 text-l text-white font-pregular">{month}</Text>
+                    <Text className="flex-1 p-2 text-l text-white font-pregular">Rent Due: ${details.rentAmount}</Text>
+                    <Text className="flex-1 p-2 text-l text-white font-pregular">{details.isPaid.isPaid ? "Paid" : "Not Paid"}</Text>
                   </View>
                 ))
             }

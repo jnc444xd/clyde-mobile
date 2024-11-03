@@ -6,7 +6,7 @@ import LoadingScreen from "../../components/LoadingScreen";
 
 const Chat = () => {
   const [chatroomID, setChatroomID] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
   const { user } = useGlobalContext();
   const adminUID = Constants.expoConfig.extra.adminUID;
 
@@ -15,14 +15,20 @@ const Chat = () => {
       setChatroomID(user.accountID);
     }
 
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 1200);
+    // const timer = setTimeout(() => {
+    //   setIsLoading(false);
+    // }, 1200);
 
-    return () => clearTimeout(timer);
+    // return () => clearTimeout(timer);
   }, [user]);
 
-  if (isLoading || !chatroomID) {
+  // if (isLoading || !chatroomID) {
+  //   return (
+  //     <LoadingScreen />
+  //   )
+  // };
+
+  if (!chatroomID) {
     return (
       <LoadingScreen />
     )

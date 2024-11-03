@@ -262,7 +262,7 @@ const Create = () => {
           }
           {
             isLoading &&
-            <View className="w-full flex-row justify-center">
+            <View className="w-full flex-row justify-center mt-4">
               <Image
                 source={icons.loading}
                 className="w-[50] h-[50]"
@@ -272,9 +272,21 @@ const Create = () => {
           }
           {
             !isLoading &&
+            !uploadSuccess &&
             <View className="w-full flex-row justify-center">
               <CustomButton
                 title="Upload Photo"
+                handlePress={takePhoto}
+                containerStyles="mt-7 w-[200]"
+              />
+            </View>
+          }
+          {
+            !isLoading &&
+            uploadSuccess &&
+            <View className="w-full flex-row justify-center">
+              <CustomButton
+                title="Upload Additional"
                 handlePress={takePhoto}
                 containerStyles="mt-7 w-[200]"
               />

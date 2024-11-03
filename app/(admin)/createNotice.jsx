@@ -23,9 +23,19 @@ const createNotice = () => {
 
         setSubmitting(true);
         try {
+            const timeStamp = new Date().toLocaleString("en-US", {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false
+            });
             const noticeData = {
                 title: form.title,
-                message: form.message
+                message: form.message,
+                createdAt: timeStamp
             };
             const result = await addNotice(noticeData);
             Alert.alert("Notice created successfully")

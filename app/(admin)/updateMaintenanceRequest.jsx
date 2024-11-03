@@ -8,15 +8,15 @@ import {
     Image,
     RefreshControl,
     Modal,
-    Button,
     Switch,
     TextInput,
     Alert,
-    ImageBackground
+    ImageBackground,
+    TouchableOpacity
 } from "react-native";
-import { images } from "../../constants";
+import { images, icons } from "../../constants";
 import { CustomButton } from "../../components";
-import { getAllMaintenanceRequests, updateMaintenanceRequest } from "../../firebase/database";
+import { getAllMaintenanceRequests, updateMaintenanceRequest, deleteMaintenanceRequest } from "../../firebase/database";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 const UpdateRequests = () => {
@@ -46,8 +46,9 @@ const UpdateRequests = () => {
     const fetchData = async () => {
         try {
             const fetchedData = await getAllMaintenanceRequests();
+            const incompleteRequests = fetchedData.filter((request) => !request.isComplete);
 
-            const groupedData = fetchedData.reduce((acc, item) => {
+            const groupedData = incompleteRequests.reduce((acc, item) => {
                 (acc[item.unit] = acc[item.unit] || []).push(item);
                 return acc;
             }, {});
@@ -60,7 +61,7 @@ const UpdateRequests = () => {
 
     useEffect(() => {
         fetchData();
-    }, []);
+    }, [maintenanceData]);
 
     const onRefresh = () => {
         setRefreshing(true);
@@ -71,6 +72,33 @@ const UpdateRequests = () => {
     const openUpdateModal = (selectedID) => {
         setCurrentItem(selectedID);
         setModalVisible(true);
+    };
+
+    const handleDelete = (requestID) => {
+        try {
+            deleteMaintenanceRequest(requestID);
+            console.log("Maintenance request deleted successfully");
+            setModalVisible(false);
+        } catch (error) {
+            console.error("Failed to delete maintenance request: ", error);
+        }
+    };
+
+    const deleteConfirmation = (requestID) => {
+        Alert.alert(
+            "Confirm Delete",
+            "Are you sure you want to delete this item?",
+            [
+                {
+                    text: "Cancel",
+                    onPress: () => console.log("Cancel Pressed")
+                },
+                {
+                    text: "OK",
+                    onPress: () => handleDelete(requestID)
+                }
+            ]
+        );
     };
 
     const submit = async (updateID) => {
@@ -119,73 +147,89 @@ const UpdateRequests = () => {
                         setModalVisible(!modalVisible);
                     }}
                 >
-                    <View style={{ marginTop: 50, marginHorizontal: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
-                        <Text style={{ marginBottom: 15, textAlign: "center" }} className="text-bold text-xl">Update Maintenance Request</Text>
-                        <View className={`space-y-2`}>
-                            <Text className="text-base text-black font-pmedium">Arrival Window</Text>
-                            <View className="w-full h-16 px-4 bg-white rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
-                                <TextInput
-                                    className="flex-1 text-black font-psemibold text-base"
-                                    value={form.arrivalWindow}
-                                    placeholder="Enter Here..."
-                                    placeholderTextColor="black"
-                                    onChangeText={(e) => setForm({ ...form, arrivalWindow: e })}
+                    <ScrollView>
+                        <View style={{ marginTop: 50, marginHorizontal: 20, backgroundColor: "white", borderRadius: 20, padding: 35, alignItems: "center", shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.25, shadowRadius: 4, elevation: 5 }}>
+                            <View className="w-full self-end mb-4">
+                                <TouchableOpacity
+                                    onPress={() => setModalVisible(!modalVisible)}
+                                    className="bg-white"
+                                >
+                                    <Image
+                                        source={icons.close}
+                                        resizeMode="contain"
+                                        className="w-[20px] h-[20px]"
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                            <Text style={{ marginBottom: 15, textAlign: "center" }} className="font-pbold text-xl">Update Maintenance Request</Text>
+                            <View className={`space-y-2`}>
+                                <Text className="text-base text-black font-pmedium">Arrival Window</Text>
+                                <View className="w-full h-16 px-4 bg-white rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+                                    <TextInput
+                                        className="flex-1 text-black font-psemibold text-base"
+                                        value={form.arrivalWindow}
+                                        placeholder="Enter Here..."
+                                        placeholderTextColor="black"
+                                        onChangeText={(e) => setForm({ ...form, arrivalWindow: e })}
+                                    />
+                                </View>
+                            </View>
+                            <View className={`space-y-2`}>
+                                <Text className="text-base text-black font-pmedium">Arrival Notes</Text>
+                                <View className="w-full h-16 px-4 bg-white rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
+                                    <TextInput
+                                        className="flex-1 text-black font-psemibold text-base"
+                                        value={form.arrivalNotes}
+                                        placeholder="Enter Here..."
+                                        placeholderTextColor="black"
+                                        onChangeText={(e) => setForm({ ...form, arrivalNotes: e })}
+                                    />
+                                </View>
+                            </View>
+                            <View>
+                                <Text className="text-[16px] text-black mt-10 font-psemibold">Scheduled?{"\n"}</Text>
+                                <Switch
+                                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                    thumbColor={isScheduled ? "#f5dd4b" : "#f4f3f4"}
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={toggleScheduled}
+                                    value={isScheduled}
                                 />
                             </View>
-                        </View>
-                        <View className={`space-y-2`}>
-                            <Text className="text-base text-black font-pmedium">Arrival Notes</Text>
-                            <View className="w-full h-16 px-4 bg-white rounded-2xl border-2 border-black-200 focus:border-secondary flex flex-row items-center">
-                                <TextInput
-                                    className="flex-1 text-black font-psemibold text-base"
-                                    value={form.arrivalNotes}
-                                    placeholder="Enter Here..."
-                                    placeholderTextColor="black"
-                                    onChangeText={(e) => setForm({ ...form, arrivalNotes: e })}
+                            <View>
+                                <Text className="text-[16px] text-black mt-10 font-psemibold">Invoice Paid?{"\n"}</Text>
+                                <Switch
+                                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                    thumbColor={isPaid ? "#f5dd4b" : "#f4f3f4"}
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={togglePaid}
+                                    value={isPaid}
                                 />
                             </View>
-                        </View>
-                        <View>
-                            <Text className="text-[16px] text-black mt-10 font-psemibold">Scheduled?{"\n"}</Text>
-                            <Switch
-                                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                                thumbColor={isScheduled ? "#f5dd4b" : "#f4f3f4"}
-                                ios_backgroundColor="#3e3e3e"
-                                onValueChange={toggleScheduled}
-                                value={isScheduled}
+                            <View>
+                                <Text className="text-[16px] text-black mt-10 font-psemibold">Completed?{"\n"}</Text>
+                                <Switch
+                                    trackColor={{ false: "#767577", true: "#81b0ff" }}
+                                    thumbColor={isComplete ? "#f5dd4b" : "#f4f3f4"}
+                                    ios_backgroundColor="#3e3e3e"
+                                    onValueChange={toggleComplete}
+                                    value={isComplete}
+                                />
+                            </View>
+                            <CustomButton
+                                title="Submit"
+                                handlePress={() => submit(currentItem)}
+                                containerStyles="mt-6"
+                                isLoading={isSubmitting}
+                            />
+                            <CustomButton
+                                title="Delete"
+                                handlePress={() => deleteConfirmation(currentItem)}
+                                containerStyles=""
+                                isLoading={isSubmitting}
                             />
                         </View>
-                        <View>
-                            <Text className="text-[16px] text-black mt-10 font-psemibold">Invoice Paid?{"\n"}</Text>
-                            <Switch
-                                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                                thumbColor={isPaid ? "#f5dd4b" : "#f4f3f4"}
-                                ios_backgroundColor="#3e3e3e"
-                                onValueChange={togglePaid}
-                                value={isPaid}
-                            />
-                        </View>
-                        <View>
-                            <Text className="text-[16px] text-black mt-10 font-psemibold">Completed?{"\n"}</Text>
-                            <Switch
-                                trackColor={{ false: "#767577", true: "#81b0ff" }}
-                                thumbColor={isComplete ? "#f5dd4b" : "#f4f3f4"}
-                                ios_backgroundColor="#3e3e3e"
-                                onValueChange={toggleComplete}
-                                value={isComplete}
-                            />
-                        </View>
-                        <CustomButton
-                            title="Submit"
-                            handlePress={() => submit(currentItem)}
-                            containerStyles="mt-7"
-                            isLoading={isSubmitting}
-                        />
-                        <Button
-                            title="Close"
-                            onPress={() => setModalVisible(!modalVisible)}
-                        />
-                    </View>
+                    </ScrollView>
                 </Modal>
                 <ScrollView
                     className="flex-1 p-4 h-full"
@@ -195,12 +239,11 @@ const UpdateRequests = () => {
                             onRefresh={onRefresh}
                             colors={["#FFF", "#FFF"]} // Android
                             tintColor="#FFF" // iOS
-                            title="Loading..." // iOS
                             titleColor="#000" // iOS
                         />
                     }
                 >
-                    <Text className="text-2xl font-semibold text-white mt-[200] font-psemibold">
+                    <Text className="text-2xl font-semibold text-white mt-[50] font-psemibold">
                         Maintenance Requests
                     </Text>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={true}>
@@ -209,28 +252,27 @@ const UpdateRequests = () => {
                                 <View key={unit}>
                                     <Text className="text-xl font-bold text-white mt-4">{`Unit ${unit}`}</Text>
                                     <View className="flex-row border-b border-gray-300">
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">                    </Text>
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Status</Text>
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Invoice</Text>
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Urgent?</Text>
-                                        <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">Description</Text>
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Location</Text>
-                                        <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">Availability</Text>
-                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">Image Reference</Text>
+                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">                     </Text>
+                                        <Text className="flex-1 p-2 text-center font-bold text-white bg-gray-800">
+                                            Created On
+                                        </Text>
+                                        <Text className="flex-2 p-2 text-center font-bold text-white bg-gray-800">
+                                            Description
+                                        </Text>
                                     </View>
                                     {requests.map((item, index) => (
                                         <View key={index} className="flex-row border-b border-gray-300">
-                                            <Button
-                                                title="Update"
+                                            <TouchableOpacity
                                                 onPress={() => openUpdateModal(item.id)}
-                                            />
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.isComplete ? 'Complete' : 'Pending'}</Text>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.invoicePaid ? 'Paid' : 'Pending'}</Text>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.urgent ? 'Yes' : 'No'}</Text>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.description}</Text>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.location}</Text>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.availability.join('\n')}</Text>
-                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">{item.media.length > 0 ? 'Yes' : 'No'}</Text>
+                                            >
+                                                <Text className="text-white font-psemibold p-2 bg-gray-800">Update</Text>
+                                            </TouchableOpacity>
+                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">
+                                                {item.createdAt}
+                                            </Text>
+                                            <Text className="flex-1 p-2 text-center text-white bg-gray-800">
+                                                {item.description}
+                                            </Text>
                                         </View>
                                     ))}
                                 </View>

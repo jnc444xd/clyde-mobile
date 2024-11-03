@@ -16,10 +16,10 @@ const LogoutButton = ({ additionalStyles }) => {
     };
 
     return (
-        <TouchableOpacity onPress={handleLogout} style={additionalStyles}>
+        <TouchableOpacity onPress={handleLogout} style={{ backgroundColor: 'transparent', ...additionalStyles }}>
             <Image
                 source={require('../assets/icons/logout.png')}
-                style={{ width: 24, height: 24 }}
+                style={{ backgroundColor: 'transparent', width: 24, height: 24 }}
                 resizeMode="contain"
             />
         </TouchableOpacity>

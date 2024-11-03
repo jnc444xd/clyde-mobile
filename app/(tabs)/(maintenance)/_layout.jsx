@@ -23,6 +23,12 @@ const MaintenanceLayout = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="completed"
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack>
 
       <Loader isLoading={loading} />
